@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { motion } from "motion/react";
 import { useLanguage } from "./language-provider";
+import { CalmToggle } from "./calm-toggle";
 import lockup from "@/public/orenda-lockup.png";
 import type { Locale } from "@/lib/types";
 
@@ -77,6 +78,8 @@ export function SiteHeader() {
               <LockIcon className="h-3.5 w-3.5" />
               {t("privacyBadge")}
             </motion.span>
+
+            <CalmToggle />
 
             <div
               role="group"

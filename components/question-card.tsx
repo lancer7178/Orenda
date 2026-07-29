@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect } from "react";
 import { motion } from "motion/react";
 import type { Question } from "@/lib/types";
 
@@ -15,6 +16,9 @@ interface QuestionCardProps {
   pendingScore: number | null;
   onSelect: (score: number) => void;
   disabled: boolean;
+  /** Shown once, early on, then retired so it stops being noise. */
+  showKeyboardHint: boolean;
+  keyboardHint: string;
 }
 
 const transition = { duration: 0.5, ease: [0.22, 0.61, 0.36, 1] as const };
@@ -37,8 +41,40 @@ export function QuestionCard({
   pendingScore,
   onSelect,
   disabled,
+  showKeyboardHint,
+  keyboardHint,
 }: QuestionCardProps) {
   const active = pendingScore ?? selectedScore;
+
+  // Number-key answering. Reaching for the mouse 55 times is the single
+  // biggest source of drag in a battery this long, so 1–5 pick an option
+  // directly and the flow keeps moving under the fingers.
+  useEffect(() => {
+    if (disabled) return;
+
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.metaKey || event.ctrlKey || event.altKey) return;
+
+      const target = event.target as HTMLElement | null;
+      if (
+        target &&
+        (target.isContentEditable ||
+          ["INPUT", "TEXTAREA", "SELECT"].includes(target.tagName))
+      ) {
+        return;
+      }
+
+      const index = Number.parseInt(event.key, 10) - 1;
+      const answer = question.answers[index];
+      if (!Number.isNaN(index) && answer) {
+        event.preventDefault();
+        onSelect(answer.score);
+      }
+    };
+
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [question.answers, onSelect, disabled]);
 
   return (
     <motion.div
@@ -83,7 +119,7 @@ export function QuestionCard({
         initial="hidden"
         animate="show"
       >
-        {question.answers.map((answer) => {
+        {question.answers.map((answer, index) => {
           const isActive = active === answer.score;
           const isDimmed = pendingScore !== null && !isActive;
 
@@ -142,6 +178,20 @@ export function QuestionCard({
               </span>
               <span className="flex-1">{answer.text}</span>
 
+              {/* The matching number key. Hidden on touch, where there is no
+                  keyboard and the hint would only add noise. */}
+              <kbd
+                aria-hidden="true"
+                className={[
+                  "hidden shrink-0 rounded-md border px-1.5 py-0.5 font-sans text-[10px] font-medium tabular-nums transition-colors duration-300 sm:block",
+                  isActive
+                    ? "border-white/30 text-white/70"
+                    : "border-hairline text-ink-muted/70 group-hover:border-sage-300",
+                ].join(" ")}
+              >
+                {index + 1}
+              </kbd>
+
               {/* Selection pulse ripple */}
               {isActive ? (
                 <motion.span
@@ -156,6 +206,17 @@ export function QuestionCard({
           );
         })}
       </motion.div>
+
+      {showKeyboardHint ? (
+        <motion.p
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.5, delay: 0.6 }}
+          className="text-ink-muted/70 mt-5 hidden text-center text-xs sm:block"
+        >
+          {keyboardHint}
+        </motion.p>
+      ) : null}
     </motion.div>
   );
 }

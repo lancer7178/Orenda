@@ -72,6 +72,28 @@ const UI = {
     ar: "تم حفظ التقدم على هذا الجهاز",
   },
 
+  // Pacing ------------------------------------------------------------------
+  minutesLeft: { en: "min left", ar: "دقيقة متبقية" },
+  leftInSection: { en: "left in this section", ar: "متبقٍ في هذا القسم" },
+  lastOneInSection: {
+    en: "last one in this section",
+    ar: "الأخير في هذا القسم",
+  },
+  sectionsDone: { en: "sections done", ar: "أقسام مكتملة" },
+  sectionCompleteTitle: { en: "Section complete", ar: "اكتمل القسم" },
+  keyboardHint: {
+    en: "Tip — press 1–5 to answer without reaching for the mouse.",
+    ar: "ملاحظة — اضغط ١–٥ للإجابة دون الحاجة إلى الفأرة.",
+  },
+
+  // Focus mode --------------------------------------------------------------
+  focusModeOn: { en: "Calm the page", ar: "تهدئة الصفحة" },
+  focusModeOff: { en: "Restore motion", ar: "إعادة الحركة" },
+  focusModeAria: {
+    en: "Reduce background movement and animation",
+    ar: "تقليل الحركة والرسوم المتحركة في الخلفية",
+  },
+
   // Resume ------------------------------------------------------------------
   resumeTitle: {
     en: "You left an assessment unfinished",

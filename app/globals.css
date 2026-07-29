@@ -259,6 +259,32 @@ html[lang="ar"] .font-display {
   }
 }
 
+/* ---------------------------------------------------------------------------
+   Calm mode — the manual counterpart to prefers-reduced-motion, toggled from
+   the header. Stills every ambient loop and softens the background wash so a
+   long question flow sits on a quiet page.
+--------------------------------------------------------------------------- */
+
+.calm-mode .orenda-wash,
+.calm-mode .orenda-glow-dot,
+.calm-mode .orenda-float,
+.calm-mode .orenda-shimmer::after {
+  animation: none !important;
+}
+
+.calm-mode .orenda-shimmer::after {
+  opacity: 0;
+}
+
+/* Keep the warmth, drop the contrast that makes the wash read as movement. */
+.calm-mode .orenda-wash {
+  background-image: radial-gradient(
+    70rem 45rem at 15% -10%,
+    color-mix(in oklab, var(--color-sage-100) 45%, transparent),
+    transparent 72%
+  );
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,

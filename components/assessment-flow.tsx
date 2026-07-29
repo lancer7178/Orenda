@@ -15,12 +15,16 @@ import { ProgressBar } from "./progress-bar";
 import { QuestionCard } from "./question-card";
 import { ResultScreen } from "./result-screen";
 import { SectionIntro } from "./section-intro";
+import { SectionProgress } from "./section-progress";
 import {
   assessmentReducer,
   deserializeProgress,
   initialAssessmentState,
   selectAnsweredCount,
+  selectMinutesRemaining,
   selectProgress,
+  selectSectionPosition,
+  selectSectionsCompleted,
   serializeProgress,
 } from "@/lib/assessment";
 import {
@@ -174,7 +178,7 @@ export function AssessmentFlow() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.4 }}
-          className="text-ink-muted text-xs tabular-nums"
+          className="text-ink-muted/70 text-xs tabular-nums"
         >
           {introDomain ? (
             <>
@@ -183,12 +187,24 @@ export function AssessmentFlow() {
             </>
           ) : (
             <>
-              {t("progressLabel")} {state.currentQuestionIndex + 1}{" "}
-              {t("progressOf")} {QUESTIONS.length}
+              {state.currentQuestionIndex + 1} {t("progressOf")}{" "}
+              {QUESTIONS.length}
             </>
           )}
         </motion.p>
       </div>
+
+      {/* The prominent readout is section-relative, so the visible horizon is
+          the next five or six questions rather than all fifty-five. */}
+      {introDomain ? null : (
+        <div className="mt-3">
+          <SectionProgress
+            section={selectSectionPosition(state)}
+            sectionName={tx(domain.name)}
+            minutesRemaining={selectMinutesRemaining(state)}
+          />
+        </div>
+      )}
 
       <div className="flex flex-1 flex-col justify-center py-10 sm:py-14">
         <AnimatePresence mode="wait" initial={false}>
@@ -197,6 +213,7 @@ export function AssessmentFlow() {
               key={`intro-${introDomain.id}`}
               domain={introDomain}
               questionCount={QUESTION_COUNT_BY_DOMAIN[introDomain.id]}
+              sectionsCompleted={selectSectionsCompleted(state)}
               onBegin={() => dispatch({ type: "dismissIntro" })}
             />
           ) : (
@@ -209,6 +226,10 @@ export function AssessmentFlow() {
               pendingScore={pendingScore}
               onSelect={handleSelect}
               disabled={pendingScore !== null}
+              // Surfaced only for the first few questions, then retired so it
+              // stops competing for attention once the habit is formed.
+              showKeyboardHint={answeredCount < 3}
+              keyboardHint={t("keyboardHint")}
             />
           )}
         </AnimatePresence>

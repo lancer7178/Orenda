@@ -1,5 +1,6 @@
 import { DOMAIN_BY_ID, DOMAIN_ORDER, DOMAINS } from "./domains";
 import {
+  FIRST_INDEX_BY_DOMAIN,
   MAX_SCORE_BY_DOMAIN,
   QUESTIONS,
   RISK_ITEM_IDS,
@@ -220,6 +221,63 @@ export function selectHasRiskFlag(state: AssessmentState): boolean {
 
 export function selectDomainName(id: DomainId) {
   return DOMAIN_BY_ID[id].name;
+}
+
+// ---------------------------------------------------------------------------
+// Pacing
+//
+// A 55-item battery is daunting when it is framed as one long climb, so the UI
+// reports position *within the current section* instead. These selectors keep
+// the finish line five or six questions away rather than fifty.
+// ---------------------------------------------------------------------------
+
+export interface SectionPosition {
+  domain: DomainId;
+  /** 1-based index of the current question inside its section. */
+  position: number;
+  /** How many questions the section holds. */
+  total: number;
+  /** How many of them already have an answer. */
+  answered: number;
+}
+
+export function selectSectionPosition(state: AssessmentState): SectionPosition {
+  const domain = QUESTIONS[state.currentQuestionIndex].domain;
+  const inSection = QUESTIONS.filter((question) => question.domain === domain);
+  const position =
+    state.currentQuestionIndex - FIRST_INDEX_BY_DOMAIN[domain] + 1;
+
+  return {
+    domain,
+    position,
+    total: inSection.length,
+    answered: inSection.filter(
+      (question) => state.answersRecord[question.id] !== undefined,
+    ).length,
+  };
+}
+
+/** Number of sections in which every question has been answered. */
+export function selectSectionsCompleted(state: AssessmentState): number {
+  return DOMAIN_ORDER.filter((domainId) =>
+    QUESTIONS.filter((question) => question.domain === domainId).every(
+      (question) => state.answersRecord[question.id] !== undefined,
+    ),
+  ).length;
+}
+
+export function selectRemainingCount(state: AssessmentState): number {
+  return QUESTIONS.length - selectAnsweredCount(state);
+}
+
+/** Rough seconds per item, used only for a reassuring "about N min left". */
+const SECONDS_PER_QUESTION = 11;
+
+/** Estimated minutes left, floored at 1 while any question remains. */
+export function selectMinutesRemaining(state: AssessmentState): number {
+  const remaining = selectRemainingCount(state);
+  if (remaining === 0) return 0;
+  return Math.max(1, Math.round((remaining * SECONDS_PER_QUESTION) / 60));
 }
 
 // ---------------------------------------------------------------------------

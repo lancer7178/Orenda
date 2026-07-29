@@ -9,6 +9,8 @@ import type { Domain } from "@/lib/types";
 interface SectionIntroProps {
   domain: Domain;
   questionCount: number;
+  /** Sections fully answered so far — drives the completion beat. */
+  sectionsCompleted: number;
   onBegin: () => void;
 }
 
@@ -31,6 +33,7 @@ const item = {
 export function SectionIntro({
   domain,
   questionCount,
+  sectionsCompleted,
   onBegin,
 }: SectionIntroProps) {
   const { t, tx, isRtl } = useLanguage();
@@ -53,6 +56,44 @@ export function SectionIntro({
           <circle cx="100" cy="100" r="45" stroke="currentColor" strokeWidth="1" strokeDasharray="4 4" />
         </svg>
       </div>
+
+      {/* Arriving at a new section means the previous one is finished. Marking
+          that explicitly turns a long climb into a run of small completions. */}
+      {sectionsCompleted > 0 ? (
+        <motion.div
+          variants={item}
+          transition={transition}
+          className="border-sage-200/70 bg-sage-50/70 text-sage-700 mb-7 inline-flex items-center gap-2.5 rounded-full border py-1.5 ps-2 pe-4 text-sm font-medium"
+        >
+          <motion.span
+            initial={{ scale: 0 }}
+            animate={{ scale: 1 }}
+            transition={{
+              delay: 0.25,
+              type: "spring",
+              stiffness: 420,
+              damping: 16,
+            }}
+            className="bg-sage-500 flex h-5 w-5 items-center justify-center rounded-full text-white"
+          >
+            <svg viewBox="0 0 12 12" fill="none" className="h-3 w-3">
+              <path
+                d="M2.5 6.2 4.9 8.5 9.5 3.6"
+                stroke="currentColor"
+                strokeWidth="1.9"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
+          </motion.span>
+          {t("sectionCompleteTitle")}
+          <span className="opacity-50">·</span>
+          <span className="tabular-nums">
+            {sectionsCompleted}/{DOMAIN_ORDER.length}
+          </span>{" "}
+          {t("sectionsDone")}
+        </motion.div>
+      ) : null}
 
       <motion.div
         variants={item}
