@@ -67,7 +67,7 @@ export function SiteHeader() {
             <div
               role="group"
               aria-label={t("languageGroup")}
-              className="border-hairline/80 flex items-center gap-0.5 rounded-full border bg-surface/70 p-0.5"
+              className="border-hairline/60 flex items-center gap-0.5 rounded-full border bg-surface/60 p-1"
             >
               {LANGUAGES.map((language) => {
                 const isActive = language.code === locale;
@@ -81,10 +81,10 @@ export function SiteHeader() {
                     aria-label={language.name}
                     title={language.name}
                     className={[
-                      "min-w-9 rounded-full px-3 py-1 text-xs font-semibold transition-colors duration-300",
+                      "min-w-9 rounded-full px-3.5 py-1.5 text-xs font-medium tracking-wide transition-all duration-300 ease-out",
                       isActive
-                        ? "bg-sage-500 text-white"
-                        : "text-ink-muted hover:text-ink",
+                        ? "bg-sage-100 text-sage-700"
+                        : "text-ink-muted hover:bg-sage-50/70 hover:text-ink",
                     ].join(" ")}
                   >
                     {language.short}
