@@ -43,7 +43,10 @@ export function SiteHeader() {
   return (
     <header className="sticky top-0 z-30">
       <div className="bg-cream/85 backdrop-blur-md">
-        <div className="mx-auto flex w-full max-w-3xl items-center justify-between gap-4 px-5 py-3.5 sm:px-8">
+        {/* Matches the hero's own max-w-6xl / px-5 sm:px-8 exactly, so the
+            logo and hero headline share a left edge on the landing page
+            instead of the navbar sitting cramped in a narrower strip. */}
+        <div className="mx-auto flex w-full max-w-6xl items-center justify-between gap-4 px-5 py-4 sm:px-8 lg:py-5">
           <Link
             href="/"
             aria-label={t("brand")}
@@ -58,7 +61,7 @@ export function SiteHeader() {
             />
           </Link>
 
-          <div className="flex items-center gap-2 sm:gap-3">
+          <div className="flex items-center gap-3 sm:gap-4">
             <span className="border-sage-200/60 bg-sage-50/60 text-sage-700 hidden items-center gap-1.5 rounded-full border px-3 py-1.5 text-xs font-medium md:inline-flex">
               <LockIcon className="h-3.5 w-3.5" />
               {t("privacyBadge")}
