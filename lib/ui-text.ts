@@ -86,12 +86,32 @@ const UI = {
     ar: "ملاحظة — اضغط ١–٥ للإجابة دون الحاجة إلى الفأرة.",
   },
 
-  // Focus mode --------------------------------------------------------------
-  focusModeOn: { en: "Calm the page", ar: "تهدئة الصفحة" },
-  focusModeOff: { en: "Restore motion", ar: "إعادة الحركة" },
-  focusModeAria: {
-    en: "Reduce background movement and animation",
-    ar: "تقليل الحركة والرسوم المتحركة في الخلفية",
+  // Breathing space ---------------------------------------------------------
+  pauseCta: { en: "Take a breath", ar: "خذ نفساً" },
+  pauseTitle: { en: "Take a breath", ar: "خذ نفساً" },
+  pauseIntro: {
+    en: "Follow the circle, or just watch it. Nothing here is recorded, nothing is timed, and your place is kept exactly where you left it.",
+    ar: "اتبع الدائرة، أو اكتفِ بمشاهدتها. لا يُسجَّل شيء هنا، ولا يوجد توقيت، ويبقى موضعك محفوظاً تماماً حيث تركته.",
+  },
+  breatheIn: { en: "Breathe in", ar: "شهيق" },
+  breatheHold: { en: "Hold", ar: "احبس" },
+  breatheOut: { en: "Breathe out", ar: "زفير" },
+  breathsTaken: { en: "breaths taken", ar: "نفَساً" },
+  pauseReassurance: {
+    en: "There is no right number. Leave whenever you are ready.",
+    ar: "لا يوجد عدد صحيح. غادر متى شعرت أنك مستعد.",
+  },
+  returnToCheckIn: {
+    en: "Return to your check-in",
+    ar: "العودة إلى تقييمك",
+  },
+
+  // Settings on the pause page ----------------------------------------------
+  pauseSettingsTitle: { en: "While you're here", ar: "بينما أنت هنا" },
+  calmSettingLabel: { en: "Calm the page", ar: "تهدئة الصفحة" },
+  calmSettingBody: {
+    en: "Stops the background movement and the sliding animations across Orenda. Useful if motion pulls your attention.",
+    ar: "يوقف حركة الخلفية والرسوم المتحركة المنزلقة في أوريندا. مفيد إن كانت الحركة تشتت انتباهك.",
   },
 
   // Resume ------------------------------------------------------------------

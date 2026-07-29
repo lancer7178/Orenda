@@ -4,7 +4,6 @@ import Image from "next/image";
 import Link from "next/link";
 import { motion } from "motion/react";
 import { useLanguage } from "./language-provider";
-import { CalmToggle } from "./calm-toggle";
 import lockup from "@/public/orenda-lockup.png";
 import type { Locale } from "@/lib/types";
 
@@ -26,6 +25,17 @@ function LockIcon({ className }: { className?: string }) {
         strokeWidth="1.2"
         strokeLinecap="round"
       />
+    </svg>
+  );
+}
+
+/** Concentric arcs — a breath expanding outward. */
+function BreathIcon({ className }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 16 16" fill="none" aria-hidden="true" className={className}>
+      <circle cx="8" cy="8" r="2" fill="currentColor" fillOpacity="0.85" />
+      <circle cx="8" cy="8" r="4.5" stroke="currentColor" strokeWidth="1.1" strokeOpacity="0.6" />
+      <circle cx="8" cy="8" r="7" stroke="currentColor" strokeWidth="1.1" strokeOpacity="0.3" />
     </svg>
   );
 }
@@ -79,7 +89,15 @@ export function SiteHeader() {
               {t("privacyBadge")}
             </motion.span>
 
-            <CalmToggle />
+            {/* A named action, not an icon. The old unlabelled switch only
+                dimmed background motion, which read as doing nothing. */}
+            <Link
+              href="/pause"
+              className="border-sage-200/70 bg-sage-50/50 text-sage-700 hover:bg-sage-100/70 hover:border-sage-300/70 inline-flex shrink-0 items-center gap-2 rounded-full border px-3.5 py-1.5 text-xs font-medium transition-colors duration-300"
+            >
+              <BreathIcon className="h-3.5 w-3.5" />
+              {t("pauseCta")}
+            </Link>
 
             <div
               role="group"

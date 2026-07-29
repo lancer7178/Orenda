@@ -49,3 +49,42 @@ export function clearProgress(): void {
     // Nothing to do — the next run will simply overwrite it.
   }
 }
+
+/* ---------------------------------------------------------------------------
+   Returning from the breathing space.
+
+   Stepping away to breathe should not be punished with a "you left an
+   assessment unfinished" prompt on the way back — that turns a break into a
+   decision. This flag says "resume straight into the question they were on".
+
+   It is session-scoped and read exactly once: the getter caches the value and
+   removes it immediately, so a later visit still gets the normal prompt.
+--------------------------------------------------------------------------- */
+
+const AUTO_RESUME_KEY = "orenda.resume-immediately";
+
+let autoResume: boolean | null = null;
+
+export function markAutoResume(): void {
+  try {
+    window.sessionStorage.setItem(AUTO_RESUME_KEY, "1");
+  } catch {
+    // Falls back to the normal resume prompt, which is a safe default.
+  }
+}
+
+export function getAutoResumeSnapshot(): boolean {
+  if (autoResume === null) {
+    try {
+      autoResume = window.sessionStorage.getItem(AUTO_RESUME_KEY) === "1";
+      window.sessionStorage.removeItem(AUTO_RESUME_KEY);
+    } catch {
+      autoResume = false;
+    }
+  }
+  return autoResume;
+}
+
+export function getServerAutoResumeSnapshot(): boolean {
+  return false;
+}

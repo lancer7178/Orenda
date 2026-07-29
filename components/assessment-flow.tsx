@@ -29,7 +29,9 @@ import {
 } from "@/lib/assessment";
 import {
   clearProgress,
+  getAutoResumeSnapshot,
   getSavedProgressSnapshot,
+  getServerAutoResumeSnapshot,
   getServerProgressSnapshot,
   saveProgress,
   subscribeToSavedProgress,
@@ -59,6 +61,13 @@ export function AssessmentFlow() {
   const savedState = useMemo(
     () => (savedRaw ? deserializeProgress(savedRaw) : null),
     [savedRaw],
+  );
+  // Coming back from the breathing space should feel like stepping back into
+  // the room, not like being asked whether you meant to leave.
+  const returningFromPause = useSyncExternalStore(
+    subscribeToSavedProgress,
+    getAutoResumeSnapshot,
+    getServerAutoResumeSnapshot,
   );
   const [resume, setResume] = useState<ResumeDecision>("pending");
 
@@ -128,8 +137,22 @@ export function AssessmentFlow() {
     setResume("resolved");
   }, []);
 
+  // Returning from a breathing break restores in place instead of asking.
+  // Adjusting state during render is the supported React pattern for this;
+  // the guards mean it can run at most once.
+  if (
+    resume === "pending" &&
+    returningFromPause &&
+    savedState !== null &&
+    answeredCount === 0 &&
+    state.currentQuestionIndex === 0
+  ) {
+    dispatch({ type: "restore", state: savedState });
+    setResume("resolved");
+  }
+
   // -- Resume prompt --------------------------------------------------------
-  if (resume === "pending" && savedState !== null) {
+  if (resume === "pending" && savedState !== null && !returningFromPause) {
     return (
       <ResumePrompt
         answered={selectAnsweredCount(savedState)}

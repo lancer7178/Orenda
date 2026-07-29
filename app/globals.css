@@ -276,6 +276,18 @@ html[lang="ar"] .font-display {
   opacity: 0;
 }
 
+/* Motion's `reducedMotion` snaps the transforms it drives, but Tailwind's
+   `transition-all` on buttons is a *CSS* transition that then re-interpolates
+   the transform Motion just set — so hover still glides. Narrowing the
+   transition property list drops movement while keeping colour and shadow
+   easing, which is what stops the page feeling abrupt. */
+.calm-mode *,
+.calm-mode *::before,
+.calm-mode *::after {
+  transition-property: opacity, color, background-color, border-color,
+    text-decoration-color, fill, stroke, box-shadow !important;
+}
+
 /* Keep the warmth, drop the contrast that makes the wash read as movement. */
 .calm-mode .orenda-wash {
   background-image: radial-gradient(
