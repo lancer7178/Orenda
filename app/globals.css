@@ -1,26 +1,118 @@
 @import "tailwindcss";
 
+/* ---------------------------------------------------------------------------
+   Orenda design tokens
+
+   The palette is deliberately low-contrast and warm: cream instead of white,
+   charcoal instead of black, desaturated accents instead of alert colours.
+   Nothing in this file should ever shout.
+--------------------------------------------------------------------------- */
+
+@theme {
+  /* Surfaces */
+  --color-cream: #f9f8f6;
+  --color-canvas: #f2f0eb;
+  --color-surface: #fffefc;
+  --color-hairline: #e6e2da;
+
+  /* Ink */
+  --color-ink: #2d3748;
+  --color-ink-soft: #57616f;
+  --color-ink-muted: #8b93a0;
+
+  /* Primary — sage green */
+  --color-sage-50: #f2f5f3;
+  --color-sage-100: #e2eae5;
+  --color-sage-200: #c6d5cd;
+  --color-sage-300: #a9bfb3;
+  --color-sage-400: #8da399;
+  --color-sage-500: #77907f;
+  --color-sage-600: #5f7568;
+  --color-sage-700: #4a5c52;
+
+  /* Secondary — muted indigo */
+  --color-indigo-soft: #6b7a8f;
+  --color-indigo-softer: #e6eaf0;
+
+  /* Result tones, coolest to warmest. None of these read as "alarm". */
+  --color-tone-steady: #8da399;
+  --color-tone-mild: #7f9aa4;
+  --color-tone-moderate: #b79a6d;
+  --color-tone-elevated: #bf8a72;
+  --color-tone-high: #a9707a;
+
+  /* Type */
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-fraunces), ui-serif, Georgia, serif;
+  --font-arabic: var(--font-plex-arabic), ui-sans-serif, system-ui, sans-serif;
+
+  /* Motion — slow and soft, never snappy */
+  --ease-calm: cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+/* --------------------------------------------------------------------------- */
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  color-scheme: light;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  /* The spec calls for one calm reading surface; the app never inverts. */
+  background-color: var(--color-cream);
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: var(--color-cream);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* Arabic gets its own family and a little more line height for legibility. */
+html[lang="ar"] body {
+  font-family: var(--font-arabic);
+  line-height: 1.85;
+}
+
+html[lang="ar"] .font-display {
+  font-family: var(--font-arabic);
+  font-weight: 600;
+}
+
+/* Focus ring: visible for keyboards, absent for mouse clicks. */
+:focus-visible {
+  outline: 2px solid var(--color-sage-500);
+  outline-offset: 3px;
+  border-radius: 9999px;
+}
+
+::selection {
+  background-color: var(--color-sage-200);
+  color: var(--color-ink);
+}
+
+/* The one grain of texture in the app: a barely-there warm gradient wash. */
+.orenda-wash {
+  background-image:
+    radial-gradient(
+      60rem 40rem at 12% -10%,
+      color-mix(in oklab, var(--color-sage-200) 55%, transparent),
+      transparent 70%
+    ),
+    radial-gradient(
+      50rem 36rem at 92% 6%,
+      color-mix(in oklab, var(--color-indigo-softer) 80%, transparent),
+      transparent 68%
+    );
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }
