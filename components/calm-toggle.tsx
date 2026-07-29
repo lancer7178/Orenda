@@ -1,29 +1,7 @@
 "use client";
 
-import { useEffect, useSyncExternalStore } from "react";
 import { useLanguage } from "./language-provider";
-import {
-  getCalmSnapshot,
-  getServerCalmSnapshot,
-  setCalm,
-  subscribeToCalm,
-} from "@/lib/calm-store";
-
-export function useCalmMode() {
-  const calm = useSyncExternalStore(
-    subscribeToCalm,
-    getCalmSnapshot,
-    getServerCalmSnapshot,
-  );
-
-  // Syncing a class onto an external system (the document) — the CSS in
-  // globals.css keys every ambient animation off it.
-  useEffect(() => {
-    document.documentElement.classList.toggle("calm-mode", calm);
-  }, [calm]);
-
-  return { calm, setCalm };
-}
+import { useCalmMode } from "./calm-provider";
 
 function WavesIcon({ calm, className }: { calm: boolean; className?: string }) {
   return (

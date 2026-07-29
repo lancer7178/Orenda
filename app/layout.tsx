@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Fraunces, IBM_Plex_Sans_Arabic, Inter } from "next/font/google";
+import { CalmProvider } from "@/components/calm-provider";
 import { LanguageProvider } from "@/components/language-provider";
 import { SiteHeader } from "@/components/site-header";
 import "./globals.css";
@@ -53,8 +54,10 @@ export default function RootLayout({
     >
       <body className="orenda-wash bg-cream text-ink flex min-h-full flex-col">
         <LanguageProvider>
-          <SiteHeader />
-          <div className="flex flex-1 flex-col">{children}</div>
+          <CalmProvider>
+            <SiteHeader />
+            <div className="flex flex-1 flex-col">{children}</div>
+          </CalmProvider>
         </LanguageProvider>
       </body>
     </html>
