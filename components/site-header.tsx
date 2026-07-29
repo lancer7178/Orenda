@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { motion } from "motion/react";
 import { useLanguage } from "./language-provider";
 import lockup from "@/public/orenda-lockup.png";
 import type { Locale } from "@/lib/types";
@@ -41,8 +42,13 @@ export function SiteHeader() {
   const { t, locale, setLocale } = useLanguage();
 
   return (
-    <header className="sticky top-0 z-30">
-      <div className="bg-cream/85 backdrop-blur-md">
+    <motion.header
+      initial={{ opacity: 0, y: -12 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.7, ease: [0.22, 0.61, 0.36, 1] }}
+      className="sticky top-0 z-30"
+    >
+      <div className="bg-cream/80 backdrop-blur-xl" style={{ backdropFilter: "blur(20px) saturate(1.4)" }}>
         {/* Matches the hero's own max-w-6xl / px-5 sm:px-8 exactly, so the
             logo and hero headline share a left edge on the landing page
             instead of the navbar sitting cramped in a narrower strip. */}
@@ -50,7 +56,7 @@ export function SiteHeader() {
           <Link
             href="/"
             aria-label={t("brand")}
-            className="shrink-0 rounded-lg transition-opacity duration-300 hover:opacity-65"
+            className="shrink-0 rounded-lg transition-all duration-300 hover:opacity-65 hover:scale-[1.02]"
           >
             <Image
               src={lockup}
@@ -62,16 +68,34 @@ export function SiteHeader() {
           </Link>
 
           <div className="flex items-center gap-3 sm:gap-4">
-            <span className="border-sage-200/60 bg-sage-50/60 text-sage-700 hidden items-center gap-1.5 rounded-full border px-3 py-1.5 text-xs font-medium md:inline-flex">
+            <motion.span
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.5, delay: 0.4 }}
+              className="border-sage-200/60 bg-sage-50/60 text-sage-700 hidden items-center gap-1.5 rounded-full border px-3 py-1.5 text-xs font-medium md:inline-flex"
+            >
               <LockIcon className="h-3.5 w-3.5" />
               {t("privacyBadge")}
-            </span>
+            </motion.span>
 
             <div
               role="group"
               aria-label={t("languageGroup")}
-              className="border-hairline/60 flex items-center gap-0.5 rounded-full border bg-surface/60 p-1"
+              className="border-hairline/60 relative flex items-center gap-0.5 rounded-full border bg-surface/60 p-1"
             >
+              {/* Sliding background indicator */}
+              <motion.div
+                layout
+                className="bg-sage-100 absolute h-[calc(100%-8px)] rounded-full"
+                style={{
+                  width: `calc(${100 / LANGUAGES.length}% - 4px)`,
+                }}
+                animate={{
+                  x: locale === "en" ? 4 : "calc(100% + 4px)",
+                }}
+                transition={{ duration: 0.35, ease: [0.22, 0.61, 0.36, 1] }}
+              />
+
               {LANGUAGES.map((language) => {
                 const isActive = language.code === locale;
                 return (
@@ -84,10 +108,10 @@ export function SiteHeader() {
                     aria-label={language.name}
                     title={language.name}
                     className={[
-                      "min-w-9 rounded-full px-3.5 py-1.5 text-xs font-medium tracking-wide transition-all duration-300 ease-out",
+                      "relative z-10 min-w-9 rounded-full px-3.5 py-1.5 text-xs font-medium tracking-wide transition-colors duration-300 ease-out",
                       isActive
-                        ? "bg-sage-100 text-sage-700"
-                        : "text-ink-muted hover:bg-sage-50/70 hover:text-ink",
+                        ? "text-sage-700"
+                        : "text-ink-muted hover:text-ink",
                     ].join(" ")}
                   >
                     {language.short}
@@ -109,6 +133,6 @@ export function SiteHeader() {
         aria-hidden="true"
         className="from-cream/80 h-5 w-full bg-linear-to-b to-transparent"
       />
-    </header>
+    </motion.header>
   );
 }

@@ -12,7 +12,17 @@ interface SectionIntroProps {
   onBegin: () => void;
 }
 
-const transition = { duration: 0.5, ease: [0.22, 0.61, 0.36, 1] as const };
+const transition = { duration: 0.55, ease: [0.22, 0.61, 0.36, 1] as const };
+
+const cascadeVariants = {
+  hidden: {},
+  show: { transition: { staggerChildren: 0.1, delayChildren: 0.05 } },
+};
+
+const item = {
+  hidden: { opacity: 0, y: 16 },
+  show: { opacity: 1, y: 0 },
+};
 
 /**
  * A breath between sections. At 55 items the flow needs somewhere to pause,
@@ -28,38 +38,74 @@ export function SectionIntro({
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 16 }}
-      animate={{ opacity: 1, y: 0 }}
+      initial="hidden"
+      animate="show"
       exit={{ opacity: 0, y: -12 }}
+      variants={cascadeVariants}
       transition={transition}
-      className="flex flex-col items-start"
+      className="relative flex flex-col items-start"
     >
-      <div className="text-sage-600 flex items-center gap-2.5 text-sm font-medium">
-        <LeafMark className="text-sage-300 h-5 w-5" />
-        {t("sectionLabel")} {position} {t("progressOf")} {DOMAIN_ORDER.length}
+      {/* Decorative background circles */}
+      <div aria-hidden="true" className="pointer-events-none absolute -right-16 -top-16 opacity-[0.06]">
+        <svg width="200" height="200" viewBox="0 0 200 200" fill="none">
+          <circle cx="100" cy="100" r="95" stroke="currentColor" strokeWidth="1" />
+          <circle cx="100" cy="100" r="70" stroke="currentColor" strokeWidth="1" />
+          <circle cx="100" cy="100" r="45" stroke="currentColor" strokeWidth="1" strokeDasharray="4 4" />
+        </svg>
       </div>
 
-      <h1 className="font-display text-ink mt-5 text-[30px] leading-tight font-semibold tracking-tight sm:text-[38px]">
+      <motion.div
+        variants={item}
+        transition={transition}
+        className="text-sage-600 flex items-center gap-2.5 text-sm font-medium"
+      >
+        <motion.div
+          animate={{ rotate: [0, 8, -5, 0] }}
+          transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
+        >
+          <LeafMark className="text-sage-300 h-5 w-5" />
+        </motion.div>
+        {t("sectionLabel")} {position} {t("progressOf")} {DOMAIN_ORDER.length}
+      </motion.div>
+
+      <motion.h1
+        variants={item}
+        transition={transition}
+        className="font-display text-ink mt-5 text-[30px] leading-tight font-semibold tracking-tight sm:text-[38px]"
+      >
         {tx(domain.name)}
-      </h1>
+      </motion.h1>
 
-      <p className="text-ink-soft mt-4 max-w-lg text-lg leading-relaxed text-pretty">
+      <motion.p
+        variants={item}
+        transition={transition}
+        className="text-ink-soft mt-4 max-w-lg text-lg leading-relaxed text-pretty"
+      >
         {tx(domain.blurb)}
-      </p>
+      </motion.p>
 
-      <div className="text-ink-muted mt-6 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm">
+      <motion.div
+        variants={item}
+        transition={transition}
+        className="text-ink-muted mt-6 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm"
+      >
         <span className="border-hairline rounded-full border px-3 py-1">
           {tx(domain.instrument)}
         </span>
         <span>
           {questionCount} {t("questionsWord")}
         </span>
-      </div>
+      </motion.div>
 
-      <button
+      <motion.button
+        variants={item}
+        transition={transition}
+        whileHover={{ scale: 1.03, y: -2 }}
+        whileTap={{ scale: 0.97 }}
         type="button"
         onClick={onBegin}
-        className="group bg-sage-500 hover:bg-sage-600 shadow-sage-600/15 mt-10 inline-flex items-center gap-3 rounded-full px-8 py-4 text-base font-medium text-white shadow-lg transition-all duration-300 hover:-translate-y-0.5"
+        className="group bg-sage-500 hover:bg-sage-600 mt-10 inline-flex items-center gap-3 rounded-full px-8 py-4 text-base font-medium text-white shadow-lg transition-all duration-300"
+        style={{ boxShadow: "var(--shadow-elevated)" }}
       >
         {t("beginSection")}
         <svg
@@ -78,7 +124,7 @@ export function SectionIntro({
             strokeLinejoin="round"
           />
         </svg>
-      </button>
+      </motion.button>
     </motion.div>
   );
 }

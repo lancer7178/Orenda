@@ -26,8 +26,16 @@ const TONE_TEXT: Record<ResultTone, string> = {
   high: "text-tone-high",
 };
 
-const rise = { hidden: { opacity: 0, y: 16 }, show: { opacity: 1, y: 0 } };
-const transition = { duration: 0.65, ease: [0.22, 0.61, 0.36, 1] as const };
+const TONE_GLOW: Record<ResultTone, string> = {
+  steady: "rgba(141, 163, 153, 0.15)",
+  mild: "rgba(127, 154, 164, 0.15)",
+  moderate: "rgba(183, 154, 109, 0.15)",
+  elevated: "rgba(191, 138, 114, 0.15)",
+  high: "rgba(169, 112, 122, 0.15)",
+};
+
+const rise = { hidden: { opacity: 0, y: 20 }, show: { opacity: 1, y: 0 } };
+const transition = { duration: 0.7, ease: [0.22, 0.61, 0.36, 1] as const };
 
 interface ResultScreenProps {
   state: AssessmentState;
@@ -48,9 +56,19 @@ export function ResultScreen({ state, onRetake }: ResultScreenProps) {
     <motion.main
       initial="hidden"
       animate="show"
-      variants={{ hidden: {}, show: { transition: { staggerChildren: 0.09 } } }}
-      className="mx-auto w-full max-w-3xl px-5 pt-12 pb-20 sm:px-8 sm:pt-16"
+      variants={{
+        hidden: {},
+        show: { transition: { staggerChildren: 0.12, delayChildren: 0.05 } },
+      }}
+      className="relative mx-auto w-full max-w-3xl px-5 pt-12 pb-20 sm:px-8 sm:pt-16"
     >
+      {/* Decorative gradient blob matching result tone */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute -top-20 left-1/2 h-[400px] w-[600px] -translate-x-1/2 rounded-full opacity-60 blur-[100px]"
+        style={{ background: TONE_GLOW[level.tone] }}
+      />
+
       {showCrisis ? (
         <motion.aside
           variants={rise}
@@ -59,7 +77,11 @@ export function ResultScreen({ state, onRetake }: ResultScreenProps) {
           className="border-tone-high/30 bg-tone-high/[0.07] mb-10 rounded-3xl border p-6 sm:p-7"
         >
           <h2 className="text-tone-high flex items-center gap-2.5 text-[15px] font-semibold">
-            <span className="bg-tone-high h-1.5 w-1.5 rounded-full" />
+            <motion.span
+              animate={{ scale: [1, 1.3, 1] }}
+              transition={{ duration: 2, repeat: Infinity }}
+              className="bg-tone-high h-1.5 w-1.5 rounded-full"
+            />
             {t("crisisTitle")}
           </h2>
           <p className="text-ink-soft mt-3 text-[15px] leading-relaxed">
@@ -168,7 +190,11 @@ export function ResultScreen({ state, onRetake }: ResultScreenProps) {
       <motion.section
         variants={rise}
         transition={transition}
-        className="border-sage-200/60 bg-sage-50/50 mt-14 rounded-3xl border p-6 sm:p-8"
+        className="glass-card mt-14 rounded-3xl p-6 sm:p-8"
+        style={{
+          borderColor: "color-mix(in oklab, var(--color-sage-200) 60%, transparent)",
+          background: "rgba(242, 245, 243, 0.5)",
+        }}
       >
         <h2 className="text-sage-700 text-xs font-medium tracking-widest uppercase">
           {t("resultNextStep")}
@@ -184,19 +210,24 @@ export function ResultScreen({ state, onRetake }: ResultScreenProps) {
         transition={transition}
         className="mt-10 flex flex-wrap items-center gap-3"
       >
-        <button
+        <motion.button
           type="button"
           onClick={onRetake}
-          className="bg-sage-500 hover:bg-sage-600 shadow-sage-600/15 rounded-full px-7 py-3.5 text-[15px] font-medium text-white shadow-lg transition-all duration-300 hover:-translate-y-0.5"
+          whileHover={{ scale: 1.03, y: -2 }}
+          whileTap={{ scale: 0.97 }}
+          className="bg-sage-500 hover:bg-sage-600 rounded-full px-7 py-3.5 text-[15px] font-medium text-white shadow-lg transition-all duration-300"
+          style={{ boxShadow: "var(--shadow-elevated)" }}
         >
           {t("retake")}
-        </button>
-        <Link
-          href="/"
-          className="border-hairline text-ink-soft hover:border-sage-300 hover:text-ink rounded-full border bg-surface px-7 py-3.5 text-[15px] font-medium transition-colors"
-        >
-          {t("backHome")}
-        </Link>
+        </motion.button>
+        <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+          <Link
+            href="/"
+            className="border-hairline text-ink-soft hover:border-sage-300 hover:text-ink inline-block rounded-full border bg-surface px-7 py-3.5 text-[15px] font-medium transition-colors"
+          >
+            {t("backHome")}
+          </Link>
+        </motion.div>
       </motion.div>
 
       <motion.p

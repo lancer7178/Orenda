@@ -169,7 +169,13 @@ export function AssessmentFlow() {
           <span />
         )}
 
-        <p className="text-ink-muted text-xs tabular-nums">
+        <motion.p
+          key={state.currentQuestionIndex}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.4 }}
+          className="text-ink-muted text-xs tabular-nums"
+        >
           {introDomain ? (
             <>
               {t("sectionLabel")} {DOMAIN_ORDER.indexOf(introDomain.id) + 1}{" "}
@@ -181,7 +187,7 @@ export function AssessmentFlow() {
               {t("progressOf")} {QUESTIONS.length}
             </>
           )}
-        </p>
+        </motion.p>
       </div>
 
       <div className="flex flex-1 flex-col justify-center py-10 sm:py-14">
@@ -208,9 +214,14 @@ export function AssessmentFlow() {
         </AnimatePresence>
       </div>
 
-      <p className="text-ink-muted mt-auto text-center text-xs">
+      <motion.p
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.6, delay: 0.3 }}
+        className="text-ink-muted mt-auto text-center text-xs"
+      >
         {answeredCount > 0 ? t("savedLocally") : t("privacyBadge")}
-      </p>
+      </motion.p>
     </main>
   );
 }
@@ -233,35 +244,46 @@ function ResumePrompt({
   return (
     <main className="mx-auto flex w-full max-w-xl flex-1 flex-col justify-center px-5 py-20 sm:px-8">
       <motion.div
-        initial={{ opacity: 0, y: 16 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.55, ease: [0.22, 0.61, 0.36, 1] }}
-        className="border-hairline/70 rounded-3xl border bg-surface/70 p-7 backdrop-blur-sm sm:p-9"
+        initial={{ opacity: 0, y: 20, scale: 0.97 }}
+        animate={{ opacity: 1, y: 0, scale: 1 }}
+        transition={{ duration: 0.6, ease: [0.22, 0.61, 0.36, 1] }}
+        className="glass-card rounded-3xl p-7 sm:p-9"
+        style={{ boxShadow: "var(--shadow-elevated)" }}
       >
         <h1 className="font-display text-ink text-2xl font-semibold tracking-tight">
           {t("resumeTitle")}
         </h1>
         <p className="text-ink-soft mt-3 leading-relaxed">{t("resumeBody")}</p>
 
-        <p className="text-sage-700 bg-sage-50/70 border-sage-200/60 mt-5 inline-flex rounded-full border px-4 py-1.5 text-sm font-medium tabular-nums">
+        <motion.p
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.4, delay: 0.3 }}
+          className="text-sage-700 bg-sage-50/70 border-sage-200/60 mt-5 inline-flex rounded-full border px-4 py-1.5 text-sm font-medium tabular-nums"
+        >
           {answered} / {total} {t("resumeAnswered")}
-        </p>
+        </motion.p>
 
         <div className="mt-8 flex flex-wrap gap-3">
-          <button
+          <motion.button
             type="button"
             onClick={onContinue}
-            className="bg-sage-500 hover:bg-sage-600 shadow-sage-600/15 rounded-full px-7 py-3.5 text-[15px] font-medium text-white shadow-lg transition-all duration-300 hover:-translate-y-0.5"
+            whileHover={{ scale: 1.03, y: -2 }}
+            whileTap={{ scale: 0.97 }}
+            className="bg-sage-500 hover:bg-sage-600 rounded-full px-7 py-3.5 text-[15px] font-medium text-white shadow-lg transition-all duration-300"
+            style={{ boxShadow: "var(--shadow-elevated)" }}
           >
             {t("resumeContinue")}
-          </button>
-          <button
+          </motion.button>
+          <motion.button
             type="button"
             onClick={onStartFresh}
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
             className="border-hairline text-ink-soft hover:border-sage-300 hover:text-ink rounded-full border bg-surface px-7 py-3.5 text-[15px] font-medium transition-colors"
           >
             {t("resumeRestart")}
-          </button>
+          </motion.button>
         </div>
       </motion.div>
     </main>
@@ -278,13 +300,15 @@ function BackButton({
   isRtl: boolean;
 }) {
   return (
-    <button
+    <motion.button
       type="button"
       onClick={onClick}
+      whileHover={{ x: isRtl ? 3 : -3 }}
+      whileTap={{ scale: 0.95 }}
       className="text-ink-muted hover:text-ink -ms-2 inline-flex items-center gap-1.5 rounded-full px-2 py-1 text-xs transition-colors"
     >
       <span aria-hidden="true">{isRtl ? "→" : "←"}</span>
       {label}
-    </button>
+    </motion.button>
   );
 }
