@@ -78,7 +78,7 @@ export function SiteHeader() {
             />
           </Link>
 
-          <div className="flex items-center gap-3 sm:gap-4">
+          <div className="flex items-center gap-2 sm:gap-3 md:gap-4">
             <motion.span
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
@@ -90,13 +90,18 @@ export function SiteHeader() {
             </motion.span>
 
             {/* A named action, not an icon. The old unlabelled switch only
-                dimmed background motion, which read as doing nothing. */}
+                dimmed background motion, which read as doing nothing.
+                Below `sm` the label is dropped — three labelled controls plus
+                the logo overflow a 320px screen — but the accessible name
+                stays on the element either way. */}
             <Link
               href="/pause"
-              className="border-sage-200/70 bg-sage-50/50 text-sage-700 hover:bg-sage-100/70 hover:border-sage-300/70 inline-flex shrink-0 items-center gap-2 rounded-full border px-3.5 py-1.5 text-xs font-medium transition-colors duration-300"
+              aria-label={t("pauseCta")}
+              title={t("pauseCta")}
+              className="border-sage-200/70 bg-sage-50/50 text-sage-700 hover:bg-sage-100/70 hover:border-sage-300/70 inline-flex shrink-0 items-center gap-2 rounded-full border px-2.5 py-1.5 text-xs font-medium transition-colors duration-300 sm:px-3.5"
             >
-              <BreathIcon className="h-3.5 w-3.5" />
-              {t("pauseCta")}
+              <BreathIcon className="h-4 w-4 sm:h-3.5 sm:w-3.5" />
+              <span className="hidden sm:inline">{t("pauseCta")}</span>
             </Link>
 
             <div
@@ -116,7 +121,7 @@ export function SiteHeader() {
                     aria-label={language.name}
                     title={language.name}
                     className={[
-                      "relative min-w-9 rounded-full px-3.5 py-1.5 text-xs font-medium tracking-wide transition-colors duration-300 ease-out",
+                      "relative min-w-8 rounded-full px-2.5 py-1.5 text-xs font-medium tracking-wide transition-colors duration-300 ease-out sm:min-w-9 sm:px-3.5",
                       isActive
                         ? "text-sage-700"
                         : "text-ink-muted hover:text-ink",
