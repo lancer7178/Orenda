@@ -59,7 +59,10 @@ export function SiteHeader() {
       transition={{ duration: 0.7, ease: [0.22, 0.61, 0.36, 1] }}
       className="sticky top-0 z-30"
     >
-      <div className="bg-cream/80 backdrop-blur-xl" style={{ backdropFilter: "blur(20px) saturate(1.4)" }}>
+      {/* `.orenda-frost` rather than `backdrop-blur-*`: the blur has to be
+          conditional on the device, and an inline `backdropFilter` cannot
+          carry a media query. */}
+      <div className="orenda-frost">
         {/* Matches the hero's own max-w-6xl / px-5 sm:px-8 exactly, so the
             logo and hero headline share a left edge on the landing page
             instead of the navbar sitting cramped in a narrower strip. */}

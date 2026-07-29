@@ -11,18 +11,29 @@ const inter = Inter({
   display: "swap",
 });
 
+// No `axes` here on purpose. Fraunces ships SOFT/WONK/opsz as extra variable
+// axes, and asking for them roughly doubles the file — but nothing in the app
+// sets `font-variation-settings`, so every one of those bytes was paying for
+// an axis that never moves off its default.
 const fraunces = Fraunces({
   variable: "--font-fraunces",
   subsets: ["latin"],
   display: "swap",
-  axes: ["SOFT", "WONK", "opsz"],
 });
 
 const plexArabic = IBM_Plex_Sans_Arabic({
   variable: "--font-plex-arabic",
+  // 300 was never used — the app only reaches for 400, 500 and 600.
+  weight: ["400", "500", "600"],
   subsets: ["arabic", "latin"],
-  weight: ["300", "400", "500", "600"],
   display: "swap",
+  // The document is always server-rendered as `lang="en"`; Arabic is applied
+  // only after the client reads the stored locale. So preloading it is wrong
+  // on first paint for everyone, and for an English reader it is weight that
+  // is never rendered at all. Dropped to an on-demand fetch: the @font-face
+  // rules still ship, and the browser pulls the files the moment Arabic text
+  // is actually laid out.
+  preload: false,
 });
 
 export const metadata: Metadata = {

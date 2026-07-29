@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { motion, useScroll, useTransform } from "motion/react";
-import { useRef } from "react";
+import { useRef, useSyncExternalStore } from "react";
 import { useLanguage } from "./language-provider";
 import { LeafMark } from "./leaf-mark";
 import { DOMAINS } from "@/lib/domains";
@@ -34,8 +34,36 @@ const META: UIKey[] = [
   "landingMetaNoTimer",
 ];
 
+/* Tailwind's `md`, so the mount and the CSS agree on one breakpoint. */
+const WIDE_QUERY = "(min-width: 48rem)";
+
+function subscribeToWide(onChange: () => void) {
+  const query = window.matchMedia(WIDE_QUERY);
+  query.addEventListener("change", onChange);
+  return () => query.removeEventListener("change", onChange);
+}
+
+function getWideSnapshot() {
+  return window.matchMedia(WIDE_QUERY).matches;
+}
+
+/**
+ * `hidden md:block` stops the hero visual being *painted* on a phone; it does
+ * not stop it existing. Motion still mounts it and still ticks its fourteen
+ * looping animations against a subtree that is `display: none`, which is pure
+ * cost on the device least able to afford it. Gating the mount on the same
+ * breakpoint keeps that work off phones entirely.
+ *
+ * The server snapshot is `false`, so the markup a phone receives never
+ * contains it at all.
+ */
+function useIsWide() {
+  return useSyncExternalStore(subscribeToWide, getWideSnapshot, () => false);
+}
+
 export function LandingScreen() {
   const { t, tx, isRtl } = useLanguage();
+  const isWide = useIsWide();
   const heroRef = useRef<HTMLElement>(null);
   const { scrollYProgress } = useScroll({
     target: heroRef,
@@ -153,18 +181,20 @@ export function LandingScreen() {
             </motion.ul>
           </motion.div>
 
-          <motion.div
-            initial={{ opacity: 0, scale: 0.92 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{
-              duration: 1.2,
-              delay: 0.3,
-              ease: [0.22, 0.61, 0.36, 1],
-            }}
-            className="hidden md:block"
-          >
-            <HeroVisual />
-          </motion.div>
+          {isWide ? (
+            <motion.div
+              initial={{ opacity: 0, scale: 0.92 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{
+                duration: 1.2,
+                delay: 0.3,
+                ease: [0.22, 0.61, 0.36, 1],
+              }}
+              className="hidden md:block"
+            >
+              <HeroVisual />
+            </motion.div>
+          ) : null}
         </motion.div>
       </section>
 

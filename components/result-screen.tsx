@@ -62,11 +62,16 @@ export function ResultScreen({ state, onRetake }: ResultScreenProps) {
       }}
       className="relative mx-auto w-full max-w-3xl px-5 pt-12 pb-20 sm:px-8 sm:pt-16"
     >
-      {/* Decorative gradient blob matching result tone */}
+      {/* Decorative gradient blob matching result tone. A real radial gradient
+          rather than a flat fill behind `blur-[100px]` — a blur that wide is a
+          genuinely expensive raster on a phone, and the gradient reaches the
+          same softness for free. */}
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute -top-20 left-1/2 h-64 w-full max-w-150 -translate-x-1/2 rounded-full opacity-60 blur-[70px] sm:h-100 sm:blur-[100px]"
-        style={{ background: TONE_GLOW[level.tone] }}
+        className="pointer-events-none absolute -top-20 left-1/2 h-64 w-full max-w-150 -translate-x-1/2 opacity-60 sm:h-100"
+        style={{
+          background: `radial-gradient(closest-side, ${TONE_GLOW[level.tone]}, transparent)`,
+        }}
       />
 
       {showCrisis ? (
