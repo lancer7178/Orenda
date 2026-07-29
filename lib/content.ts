@@ -1,12 +1,18 @@
-import { QUESTIONS } from "./questions";
 import { RESULT_LEVELS } from "./results";
+import { QUESTIONS } from "./questions";
 import type {
   Locale,
   LocalizedQuestion,
   LocalizedResultLevel,
+  LocalizedText,
   Question,
   ResultLevel,
 } from "./types";
+
+/** Reads a localized string for the active locale. */
+export function text(value: LocalizedText, locale: Locale): string {
+  return value[locale];
+}
 
 /** Flattens a localized question down to the plain `Question` schema shape. */
 export function resolveQuestion(

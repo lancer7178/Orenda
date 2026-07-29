@@ -3,11 +3,17 @@
 import Link from "next/link";
 import { motion } from "motion/react";
 import { ScoreDial } from "./score-dial";
+import { DomainChips, DomainProfile } from "./domain-profile";
 import { useLanguage } from "./language-provider";
 import { getResultLevel, resolveResultLevel } from "@/lib/content";
-import { selectHasRiskFlag, selectScoreByCategory } from "@/lib/assessment";
-import { MAX_SCORE, MAX_SCORE_BY_CATEGORY } from "@/lib/questions";
-import type { AssessmentState, QuestionCategory, ResultTone } from "@/lib/types";
+import {
+  selectDomainResults,
+  selectHasRiskFlag,
+  selectSteadyDomains,
+  selectTopDomains,
+} from "@/lib/assessment";
+import { MAX_SCORE } from "@/lib/questions";
+import type { AssessmentState, ResultTone } from "@/lib/types";
 
 /** International directory of crisis lines, filterable by country. */
 const HELPLINE_DIRECTORY = "https://findahelpline.com";
@@ -18,14 +24,6 @@ const TONE_TEXT: Record<ResultTone, string> = {
   moderate: "text-tone-moderate",
   elevated: "text-tone-elevated",
   high: "text-tone-high",
-};
-
-const TONE_BG: Record<ResultTone, string> = {
-  steady: "bg-tone-steady",
-  mild: "bg-tone-mild",
-  moderate: "bg-tone-moderate",
-  elevated: "bg-tone-elevated",
-  high: "bg-tone-high",
 };
 
 const rise = { hidden: { opacity: 0, y: 16 }, show: { opacity: 1, y: 0 } };
@@ -41,19 +39,16 @@ export function ResultScreen({ state, onRetake }: ResultScreenProps) {
 
   const level = getResultLevel(state.totalScore);
   const result = resolveResultLevel(level, locale);
-  const byCategory = selectScoreByCategory(state);
+  const domainResults = selectDomainResults(state);
+  const topDomains = selectTopDomains(state);
+  const steadyDomains = selectSteadyDomains(state);
   const showCrisis = selectHasRiskFlag(state);
-
-  const categories: Array<{ key: QuestionCategory; label: string }> = [
-    { key: "depression", label: t("categoryDepression") },
-    { key: "emotional", label: t("categoryEmotional") },
-  ];
 
   return (
     <motion.main
       initial="hidden"
       animate="show"
-      variants={{ hidden: {}, show: { transition: { staggerChildren: 0.1 } } }}
+      variants={{ hidden: {}, show: { transition: { staggerChildren: 0.09 } } }}
       className="mx-auto w-full max-w-3xl px-5 pt-12 pb-20 sm:px-8 sm:pt-16"
     >
       {showCrisis ? (
@@ -82,6 +77,7 @@ export function ResultScreen({ state, onRetake }: ResultScreenProps) {
         </motion.aside>
       ) : null}
 
+      {/* Headline ------------------------------------------------------- */}
       <motion.p
         variants={rise}
         transition={transition}
@@ -115,48 +111,64 @@ export function ResultScreen({ state, onRetake }: ResultScreenProps) {
         </div>
       </motion.div>
 
-      {/* Breakdown ------------------------------------------------------- */}
-      <motion.section variants={rise} transition={transition} className="mt-14">
-        <h2 className="text-ink-muted text-xs font-medium tracking-widest uppercase">
-          {t("resultBreakdown")}
-        </h2>
-        <ul className="mt-5 flex flex-col gap-5">
-          {categories.map((category, index) => {
-            const score = byCategory[category.key];
-            const max = MAX_SCORE_BY_CATEGORY[category.key] ?? 0;
-            const ratio = max > 0 ? score / max : 0;
+      {/* Summary chips -------------------------------------------------- */}
+      <motion.section
+        variants={rise}
+        transition={transition}
+        className="mt-14 grid gap-8 sm:grid-cols-2"
+      >
+        <div>
+          <h2 className="text-ink-muted text-xs font-medium tracking-widest uppercase">
+            {t("resultTopAreas")}
+          </h2>
+          <div className="mt-4">
+            {topDomains.length > 0 ? (
+              <DomainChips results={topDomains} />
+            ) : (
+              <p className="text-ink-soft text-sm leading-relaxed">
+                {t("resultTopAreasNone")}
+              </p>
+            )}
+          </div>
+        </div>
 
-            return (
-              <li key={category.key}>
-                <div className="text-ink-soft flex items-baseline justify-between text-sm">
-                  <span className="font-medium">{category.label}</span>
-                  <span className="text-ink-muted tabular-nums">
-                    {score} / {max}
-                  </span>
-                </div>
-                <div className="bg-hairline/50 mt-2 h-2 w-full overflow-hidden rounded-full">
-                  <motion.div
-                    className={`h-full rounded-full ${TONE_BG[level.tone]}`}
-                    initial={{ width: 0 }}
-                    animate={{ width: `${Math.round(ratio * 100)}%` }}
-                    transition={{
-                      duration: 1.1,
-                      delay: 0.5 + index * 0.12,
-                      ease: [0.22, 0.61, 0.36, 1],
-                    }}
-                  />
-                </div>
-              </li>
-            );
-          })}
-        </ul>
+        <div>
+          <h2 className="text-ink-muted text-xs font-medium tracking-widest uppercase">
+            {t("resultSteadyAreas")}
+          </h2>
+          <div className="mt-4">
+            {steadyDomains.length > 0 ? (
+              <DomainChips results={steadyDomains} />
+            ) : (
+              <p className="text-ink-soft text-sm leading-relaxed">
+                {t("resultSteadyNone")}
+              </p>
+            )}
+          </div>
+        </div>
+      </motion.section>
+
+      {/* Full profile ---------------------------------------------------- */}
+      <motion.section
+        variants={rise}
+        transition={transition}
+        className="border-hairline/70 mt-14 border-t pt-10"
+      >
+        <h2 className="font-display text-ink text-2xl font-semibold tracking-tight">
+          {t("resultProfile")}
+        </h2>
+        <p className="text-ink-muted mt-2 text-sm">{t("resultBreakdown")}</p>
+
+        <div className="mt-8">
+          <DomainProfile results={domainResults} />
+        </div>
       </motion.section>
 
       {/* Next step ------------------------------------------------------- */}
       <motion.section
         variants={rise}
         transition={transition}
-        className="border-sage-200/60 bg-sage-50/50 mt-12 rounded-3xl border p-6 sm:p-8"
+        className="border-sage-200/60 bg-sage-50/50 mt-14 rounded-3xl border p-6 sm:p-8"
       >
         <h2 className="text-sage-700 text-xs font-medium tracking-widest uppercase">
           {t("resultNextStep")}

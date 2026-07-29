@@ -5,8 +5,10 @@ import type { Question } from "@/lib/types";
 
 interface QuestionCardProps {
   question: Question;
+  /** The stem for this question's section, e.g. "Over the last two weeks…". */
   preamble: string;
-  categoryLabel: string;
+  /** Name of the section the question belongs to. */
+  sectionLabel: string;
   /** The previously chosen score, if the user has been here before. */
   selectedScore?: number;
   /** The score chosen just now, held during the auto-advance pause. */
@@ -20,7 +22,7 @@ const transition = { duration: 0.45, ease: [0.22, 0.61, 0.36, 1] as const };
 export function QuestionCard({
   question,
   preamble,
-  categoryLabel,
+  sectionLabel,
   selectedScore,
   pendingScore,
   onSelect,
@@ -36,7 +38,7 @@ export function QuestionCard({
       transition={transition}
     >
       <span className="border-sage-200/70 text-sage-600 inline-flex rounded-full border px-3 py-1 text-[11px] font-medium tracking-wide uppercase">
-        {categoryLabel}
+        {sectionLabel}
       </span>
 
       <p className="text-ink-muted mt-6 text-sm">{preamble}</p>
@@ -48,7 +50,7 @@ export function QuestionCard({
       <div
         role="group"
         aria-label={question.text}
-        className="mt-9 flex flex-col gap-3"
+        className="mt-8 flex flex-col gap-2.5"
       >
         {question.answers.map((answer) => {
           const isActive = active === answer.score;
@@ -62,7 +64,7 @@ export function QuestionCard({
               disabled={disabled}
               aria-pressed={isActive}
               className={[
-                "group relative flex w-full items-center gap-4 rounded-full border px-6 py-4 text-start text-[15px] transition-all duration-300 sm:text-base",
+                "group relative flex w-full items-center gap-4 rounded-full border px-6 py-3.5 text-start text-[15px] transition-all duration-300 sm:text-base",
                 isActive
                   ? "border-sage-500 bg-sage-500 text-white shadow-sage-600/20 shadow-md"
                   : "border-hairline text-ink bg-surface/80 hover:border-sage-300 hover:bg-sage-50/70",

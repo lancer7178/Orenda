@@ -9,7 +9,7 @@ import {
   useSyncExternalStore,
 } from "react";
 import { createTranslator, type Translator } from "@/lib/ui-text";
-import type { Locale } from "@/lib/types";
+import type { Locale, LocalizedText } from "@/lib/types";
 
 const STORAGE_KEY = "orenda.locale";
 const DEFAULT_LOCALE: Locale = "en";
@@ -91,7 +91,10 @@ interface LanguageContextValue {
   locale: Locale;
   dir: "ltr" | "rtl";
   isRtl: boolean;
+  /** Chrome copy, by key. */
   t: Translator;
+  /** Resolves an authored `LocalizedText` (domain names, band readings, …). */
+  tx: (value: LocalizedText) => string;
   setLocale: (locale: Locale) => void;
   toggleLocale: () => void;
 }
@@ -117,6 +120,7 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
       dir: locale === "ar" ? "rtl" : "ltr",
       isRtl: locale === "ar",
       t: createTranslator(locale),
+      tx: (value: LocalizedText) => value[locale],
       setLocale,
       toggleLocale: () => setLocale(locale === "en" ? "ar" : "en"),
     }),

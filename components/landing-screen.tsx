@@ -4,6 +4,8 @@ import Link from "next/link";
 import { motion } from "motion/react";
 import { useLanguage } from "./language-provider";
 import { LeafMark } from "./leaf-mark";
+import { DOMAINS } from "@/lib/domains";
+import { QUESTION_COUNT_BY_DOMAIN } from "@/lib/questions";
 import type { UIKey } from "@/lib/ui-text";
 
 const rise = {
@@ -24,8 +26,15 @@ const PRINCIPLES: Array<{ title: UIKey; body: UIKey }> = [
   { title: "principleThreeTitle", body: "principleThreeBody" },
 ];
 
+const META: UIKey[] = [
+  "landingMetaQuestions",
+  "landingMetaAreas",
+  "landingMetaTime",
+  "landingMetaNoTimer",
+];
+
 export function LandingScreen() {
-  const { t, isRtl } = useLanguage();
+  const { t, tx, isRtl } = useLanguage();
 
   return (
     <main className="mx-auto flex w-full max-w-3xl flex-1 flex-col px-5 pt-14 pb-20 sm:px-8 sm:pt-24">
@@ -84,30 +93,71 @@ export function LandingScreen() {
           </Link>
 
           <ul className="text-ink-muted flex flex-wrap items-center gap-x-3 gap-y-1 text-sm">
-            <li>{t("landingMetaQuestions")}</li>
-            <li aria-hidden="true" className="text-hairline">
-              ·
-            </li>
-            <li>{t("landingMetaTime")}</li>
-            <li aria-hidden="true" className="text-hairline">
-              ·
-            </li>
-            <li>{t("landingMetaNoTimer")}</li>
+            {META.map((key, index) => (
+              <li key={key} className="flex items-center gap-3">
+                {index > 0 ? (
+                  <span aria-hidden="true" className="text-hairline">
+                    ·
+                  </span>
+                ) : null}
+                {t(key)}
+              </li>
+            ))}
           </ul>
         </motion.div>
       </motion.div>
 
+      {/* What the battery covers ------------------------------------------ */}
+      <motion.section
+        initial={{ opacity: 0, y: 16 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: "-80px" }}
+        transition={{ ...transition, delay: 0.1 }}
+        className="border-hairline/70 mt-20 border-t pt-10 sm:mt-24"
+      >
+        <h2 className="font-display text-ink text-2xl font-semibold tracking-tight">
+          {t("landingCoverageTitle")}
+        </h2>
+        <p className="text-ink-soft mt-3 max-w-xl text-[15px] leading-relaxed">
+          {t("landingCoverageBody")}
+        </p>
+
+        <ol className="mt-8 grid gap-x-8 gap-y-5 sm:grid-cols-2">
+          {DOMAINS.map((domain, index) => (
+            <li
+              key={domain.id}
+              className="border-hairline/60 flex items-baseline gap-3 border-b pb-4"
+            >
+              <span className="text-sage-500 text-xs font-semibold tabular-nums">
+                {String(index + 1).padStart(2, "0")}
+              </span>
+              <div className="flex-1">
+                <h3 className="text-ink text-[15px] font-semibold">
+                  {tx(domain.name)}
+                </h3>
+                <p className="text-ink-muted mt-1 text-xs">
+                  {tx(domain.instrument)} · {QUESTION_COUNT_BY_DOMAIN[domain.id]}{" "}
+                  {t("questionsWord")}
+                </p>
+              </div>
+            </li>
+          ))}
+        </ol>
+      </motion.section>
+
+      {/* Principles -------------------------------------------------------- */}
       <motion.ul
-        variants={container}
         initial="hidden"
-        animate="show"
-        className="mt-20 grid gap-4 sm:mt-24 sm:grid-cols-3"
+        whileInView="show"
+        viewport={{ once: true, margin: "-80px" }}
+        variants={container}
+        className="mt-16 grid gap-4 sm:grid-cols-3"
       >
         {PRINCIPLES.map((principle, index) => (
           <motion.li
             key={principle.title}
             variants={rise}
-            transition={{ ...transition, delay: 0.35 + index * 0.08 }}
+            transition={{ ...transition, delay: index * 0.08 }}
             className="border-hairline/70 rounded-3xl border bg-surface/70 p-6 backdrop-blur-sm"
           >
             <span className="bg-sage-100 text-sage-600 mb-4 inline-flex h-9 w-9 items-center justify-center rounded-full text-sm font-semibold">
@@ -123,12 +173,7 @@ export function LandingScreen() {
         ))}
       </motion.ul>
 
-      <motion.footer
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.8, delay: 0.7 }}
-        className="border-hairline/70 mt-16 border-t pt-8"
-      >
+      <footer className="border-hairline/70 mt-16 border-t pt-8">
         <p className="text-ink-muted flex items-start gap-3 text-xs leading-relaxed">
           <LeafMark className="text-sage-300 mt-0.5 h-4 w-4 shrink-0" />
           <span>{t("disclaimer")}</span>
@@ -136,7 +181,7 @@ export function LandingScreen() {
         <p className="text-ink-muted/70 mt-3 ps-7 text-xs italic">
           {t("brand")} — {t("brandMeaning")}.
         </p>
-      </motion.footer>
+      </footer>
     </main>
   );
 }

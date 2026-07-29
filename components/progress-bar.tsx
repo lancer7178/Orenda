@@ -25,7 +25,7 @@ export function ProgressBar({ value, label }: ProgressBarProps) {
       className="bg-hairline/50 h-[3px] w-full overflow-hidden rounded-full"
     >
       <motion.div
-        className="from-sage-300 to-sage-500 h-full rounded-full bg-gradient-to-r"
+        className="from-sage-300 to-sage-500 h-full rounded-full bg-linear-to-r"
         initial={false}
         animate={{ width: `${percent}%` }}
         transition={{ duration: 0.9, ease: [0.22, 0.61, 0.36, 1] }}

@@ -1,8 +1,10 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
-import { LeafMark } from "./leaf-mark";
 import { useLanguage } from "./language-provider";
+import lockup from "@/public/orenda-lockup.png";
+import type { Locale } from "@/lib/types";
 
 function LockIcon({ className }: { className?: string }) {
   return (
@@ -26,40 +28,84 @@ function LockIcon({ className }: { className?: string }) {
   );
 }
 
+/**
+ * Language names are given in their own language — the convention that lets a
+ * reader find their language without already knowing the interface language.
+ */
+const LANGUAGES: Array<{ code: Locale; short: string; name: string }> = [
+  { code: "en", short: "EN", name: "English" },
+  { code: "ar", short: "ع", name: "العربية" },
+];
+
 export function SiteHeader() {
-  const { t, toggleLocale, locale } = useLanguage();
+  const { t, locale, setLocale } = useLanguage();
 
   return (
-    <header className="border-hairline/60 sticky top-0 z-30 border-b bg-cream/80 backdrop-blur-md">
-      <div className="mx-auto flex w-full max-w-3xl items-center justify-between gap-4 px-5 py-4 sm:px-8">
-        <Link
-          href="/"
-          className="group flex items-center gap-2.5 rounded-full transition-opacity hover:opacity-70"
-        >
-          <LeafMark className="text-sage-400 h-6 w-6" />
-          <span className="font-display text-ink text-lg leading-none font-semibold tracking-tight">
-            {t("brand")}
-          </span>
-        </Link>
-
-        <div className="flex items-center gap-2 sm:gap-3">
-          <span className="border-sage-200/70 bg-sage-50/60 text-sage-700 hidden items-center gap-1.5 rounded-full border px-3 py-1.5 text-xs font-medium sm:inline-flex">
-            <LockIcon className="h-3.5 w-3.5" />
-            {t("privacyBadge")}
-          </span>
-
-          <button
-            type="button"
-            onClick={toggleLocale}
-            aria-label={t("languageToggleAria")}
-            className="border-hairline text-ink-soft hover:border-sage-300 hover:text-ink rounded-full border bg-surface px-3.5 py-1.5 text-sm font-medium transition-colors"
+    <header className="sticky top-0 z-30">
+      <div className="bg-cream/85 backdrop-blur-md">
+        <div className="mx-auto flex w-full max-w-3xl items-center justify-between gap-4 px-5 py-3.5 sm:px-8">
+          <Link
+            href="/"
+            aria-label={t("brand")}
+            className="shrink-0 rounded-lg transition-opacity duration-300 hover:opacity-65"
           >
-            <span className={locale === "en" ? "font-arabic" : undefined}>
-              {t("languageToggle")}
+            <Image
+              src={lockup}
+              alt={t("brand")}
+              priority
+              className="h-7 w-auto sm:h-8"
+              sizes="160px"
+            />
+          </Link>
+
+          <div className="flex items-center gap-2 sm:gap-3">
+            <span className="border-sage-200/60 bg-sage-50/60 text-sage-700 hidden items-center gap-1.5 rounded-full border px-3 py-1.5 text-xs font-medium md:inline-flex">
+              <LockIcon className="h-3.5 w-3.5" />
+              {t("privacyBadge")}
             </span>
-          </button>
+
+            <div
+              role="group"
+              aria-label={t("languageGroup")}
+              className="border-hairline/80 flex items-center gap-0.5 rounded-full border bg-surface/70 p-0.5"
+            >
+              {LANGUAGES.map((language) => {
+                const isActive = language.code === locale;
+                return (
+                  <button
+                    key={language.code}
+                    type="button"
+                    lang={language.code}
+                    onClick={() => setLocale(language.code)}
+                    aria-pressed={isActive}
+                    aria-label={language.name}
+                    title={language.name}
+                    className={[
+                      "min-w-9 rounded-full px-3 py-1 text-xs font-semibold transition-colors duration-300",
+                      isActive
+                        ? "bg-sage-500 text-white"
+                        : "text-ink-muted hover:text-ink",
+                    ].join(" ")}
+                  >
+                    {language.short}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
         </div>
       </div>
+
+      {/* A hairline that fades at both ends, plus a soft wash below it, so the
+          header dissolves into the page instead of cutting across it. */}
+      <div
+        aria-hidden="true"
+        className="via-hairline h-px w-full bg-linear-to-r from-transparent to-transparent"
+      />
+      <div
+        aria-hidden="true"
+        className="from-cream/80 h-5 w-full bg-linear-to-b to-transparent"
+      />
     </header>
   );
 }
