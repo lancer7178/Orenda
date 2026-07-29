@@ -56,7 +56,14 @@ export default function RootLayout({
         <LanguageProvider>
           <CalmProvider>
             <SiteHeader />
-            <div className="flex flex-1 flex-col">{children}</div>
+            {/* Several screens bleed a decorative glow past the reading
+                column. `clip` (not `hidden`) keeps that bleed from turning
+                into sideways scroll on a phone without making this a scroll
+                container, so the sticky header and smooth anchor jumps
+                still work. */}
+            <div className="flex flex-1 flex-col overflow-x-clip">
+              {children}
+            </div>
           </CalmProvider>
         </LanguageProvider>
       </body>

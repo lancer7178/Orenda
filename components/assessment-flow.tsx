@@ -334,6 +334,10 @@ function ResumePrompt({
   );
 }
 
+/**
+ * "Back" is the one escape hatch in a 55-question flow, so on touch it gets a
+ * thumb-sized target; the pointer sizes stay compact from `sm` up.
+ */
 function BackButton({
   onClick,
   label,
@@ -349,7 +353,7 @@ function BackButton({
       onClick={onClick}
       whileHover={{ x: isRtl ? 3 : -3 }}
       whileTap={{ scale: 0.95 }}
-      className="text-ink-muted hover:text-ink -ms-2 inline-flex items-center gap-1.5 rounded-full px-2 py-1 text-xs transition-colors"
+      className="text-ink-muted hover:text-ink -ms-2 inline-flex items-center gap-1.5 rounded-full px-3 py-3 text-xs transition-colors sm:px-2 sm:py-1"
     >
       <span aria-hidden="true">{isRtl ? "→" : "←"}</span>
       {label}

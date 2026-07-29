@@ -49,8 +49,10 @@ export function SectionIntro({
       className="relative flex flex-col items-start"
     >
       {/* Decorative background circles */}
-      <div aria-hidden="true" className="pointer-events-none absolute -right-16 -top-16 opacity-[0.06]">
-        <svg width="200" height="200" viewBox="0 0 200 200" fill="none">
+      {/* `-end-*` rather than `-right-*`: the bleed has to follow the reading
+          direction, or it lands under the text in Arabic. */}
+      <div aria-hidden="true" className="pointer-events-none absolute -top-12 -inset-e-12 opacity-[0.06] sm:-top-16 sm:-inset-e-16">
+        <svg width="200" height="200" viewBox="0 0 200 200" fill="none" className="h-35 w-35 sm:h-50 sm:w-50">
           <circle cx="100" cy="100" r="95" stroke="currentColor" strokeWidth="1" />
           <circle cx="100" cy="100" r="70" stroke="currentColor" strokeWidth="1" />
           <circle cx="100" cy="100" r="45" stroke="currentColor" strokeWidth="1" strokeDasharray="4 4" />

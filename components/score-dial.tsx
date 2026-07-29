@@ -38,6 +38,8 @@ function useCountUp(target: number, durationMs: number = 1200, delayMs: number =
   const [current, setCurrent] = useState(0);
 
   useEffect(() => {
+    let frame = 0;
+
     const timeout = setTimeout(() => {
       let start: number | null = null;
       const step = (timestamp: number) => {
@@ -47,12 +49,17 @@ function useCountUp(target: number, durationMs: number = 1200, delayMs: number =
         // Ease out quad
         const eased = 1 - (1 - progress) * (1 - progress);
         setCurrent(Math.round(eased * target));
-        if (progress < 1) requestAnimationFrame(step);
+        if (progress < 1) frame = requestAnimationFrame(step);
       };
-      requestAnimationFrame(step);
+      frame = requestAnimationFrame(step);
     }, delayMs);
 
-    return () => clearTimeout(timeout);
+    // Retaking the assessment unmounts this mid-count; without the cancel the
+    // loop keeps ticking against a dead component.
+    return () => {
+      clearTimeout(timeout);
+      cancelAnimationFrame(frame);
+    };
   }, [target, durationMs, delayMs]);
 
   return current;
@@ -84,7 +91,7 @@ export function ScoreDial({
 
       <svg
         viewBox="0 0 160 160"
-        className="absolute inset-0 h-full w-full -rotate-[139deg]"
+        className="absolute inset-0 h-full w-full rotate-[-139deg]"
         aria-hidden="true"
       >
         {/* Ghost track for depth */}

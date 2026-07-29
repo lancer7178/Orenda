@@ -139,12 +139,15 @@ export function LandingScreen() {
             >
               {META.map((key, index) => (
                 <li key={key} className="flex items-center gap-3">
-                  {index > 0 ? (
+                  {t(key)}
+                  {/* Trailing rather than leading: this list wraps onto three
+                      lines on a phone, and a leading separator would start
+                      those lines with a stray dot. */}
+                  {index < META.length - 1 ? (
                     <span aria-hidden="true" className="text-hairline">
                       ·
                     </span>
                   ) : null}
-                  {t(key)}
                 </li>
               ))}
             </motion.ul>

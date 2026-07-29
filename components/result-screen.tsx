@@ -65,7 +65,7 @@ export function ResultScreen({ state, onRetake }: ResultScreenProps) {
       {/* Decorative gradient blob matching result tone */}
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute -top-20 left-1/2 h-[400px] w-[600px] -translate-x-1/2 rounded-full opacity-60 blur-[100px]"
+        className="pointer-events-none absolute -top-20 left-1/2 h-64 w-full max-w-150 -translate-x-1/2 rounded-full opacity-60 blur-[70px] sm:h-100 sm:blur-[100px]"
         style={{ background: TONE_GLOW[level.tone] }}
       />
 
