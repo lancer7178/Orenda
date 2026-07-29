@@ -107,6 +107,14 @@ html[lang="ar"] .font-display {
     );
 }
 
+/* Smooth in-page anchor jumps (e.g. the hero's "see what it covers" link),
+   skipped for users who asked for less motion. */
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,

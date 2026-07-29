@@ -22,6 +22,10 @@ const UI = {
     ar: "خمسة وخمسون سؤالاً عبر تسعة مجالات من الصحة النفسية، مستمدة من أدوات تقييم سريرية معتمدة. سؤال واحد في كل شاشة، دون مؤقّت، وملف مفصّل في النهاية. لن تشخّصك أوريندا، ولن تحتفظ بشيء عنك.",
   },
   startCta: { en: "Begin when you're ready", ar: "ابدأ حين تكون مستعداً" },
+  landingSecondaryCta: {
+    en: "See what it covers",
+    ar: "اطّلع على ما يغطيه",
+  },
   landingMetaQuestions: { en: "55 questions", ar: "٥٥ سؤالاً" },
   landingMetaAreas: { en: "9 areas", ar: "٩ مجالات" },
   landingMetaTime: { en: "about 10 minutes", ar: "نحو ١٠ دقائق" },
