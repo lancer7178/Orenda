@@ -52,7 +52,7 @@ export function LandingScreen() {
         {/* Ambient glow behind hero */}
         <div
           aria-hidden="true"
-          className="pointer-events-none absolute -top-32 left-1/2 h-[600px] w-[800px] -translate-x-1/2 opacity-40"
+          className="pointer-events-none absolute -top-32 left-1/2 h-150 w-200 -translate-x-1/2 opacity-40"
           style={{
             background:
               "radial-gradient(ellipse at center, color-mix(in oklab, var(--color-sage-200) 60%, transparent), transparent 70%)",

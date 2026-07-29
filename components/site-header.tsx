@@ -86,19 +86,6 @@ export function SiteHeader() {
               aria-label={t("languageGroup")}
               className="border-hairline/60 relative flex items-center gap-0.5 rounded-full border bg-surface/60 p-1"
             >
-              {/* Sliding background indicator */}
-              <motion.div
-                layout
-                className="bg-sage-100 absolute h-[calc(100%-8px)] rounded-full"
-                style={{
-                  width: `calc(${100 / LANGUAGES.length}% - 4px)`,
-                }}
-                animate={{
-                  x: locale === "en" ? 4 : "calc(100% + 4px)",
-                }}
-                transition={{ duration: 0.35, ease: [0.22, 0.61, 0.36, 1] }}
-              />
-
               {LANGUAGES.map((language) => {
                 const isActive = language.code === locale;
                 return (
@@ -111,13 +98,29 @@ export function SiteHeader() {
                     aria-label={language.name}
                     title={language.name}
                     className={[
-                      "relative z-10 min-w-9 rounded-full px-3.5 py-1.5 text-xs font-medium tracking-wide transition-colors duration-300 ease-out",
+                      "relative min-w-9 rounded-full px-3.5 py-1.5 text-xs font-medium tracking-wide transition-colors duration-300 ease-out",
                       isActive
                         ? "text-sage-700"
                         : "text-ink-muted hover:text-ink",
                     ].join(" ")}
                   >
-                    {language.short}
+                    {/* The indicator lives inside the active button and moves
+                        via a shared layout animation, so Motion measures real
+                        DOM positions. A translate-based version has to know
+                        which way is "forward" and breaks under RTL, where the
+                        flex row reverses but the transform does not. */}
+                    {isActive ? (
+                      <motion.span
+                        layoutId="language-indicator"
+                        aria-hidden="true"
+                        transition={{
+                          duration: 0.35,
+                          ease: [0.22, 0.61, 0.36, 1],
+                        }}
+                        className="bg-sage-100 absolute inset-0 rounded-full"
+                      />
+                    ) : null}
+                    <span className="relative z-10">{language.short}</span>
                   </button>
                 );
               })}
