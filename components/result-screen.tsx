@@ -1,9 +1,11 @@
 "use client";
 
+import { useRef, useState } from "react";
 import Link from "next/link";
 import { motion } from "motion/react";
 import { ScoreDial } from "./score-dial";
 import { DomainChips, DomainProfile } from "./domain-profile";
+import { PdfExportTemplate } from "./pdf-export-template";
 import { useLanguage } from "./language-provider";
 import { getResultLevel, resolveResultLevel } from "@/lib/content";
 import {
@@ -13,7 +15,7 @@ import {
   selectTopDomains,
 } from "@/lib/assessment";
 import { MAX_SCORE } from "@/lib/questions";
-import { downloadResultPdf } from "@/lib/pdf-export";
+import { renderNodeToPdf } from "@/lib/pdf-export";
 import type { AssessmentState, ResultTone } from "@/lib/types";
 
 /** International directory of crisis lines, filterable by country. */
@@ -53,16 +55,21 @@ export function ResultScreen({ state, onRetake }: ResultScreenProps) {
   const steadyDomains = selectSteadyDomains(state);
   const showCrisis = selectHasRiskFlag(state);
 
-  const handleDownloadPdf = () => {
-    downloadResultPdf({
-      state,
-      result,
-      domainResults,
-      maxScore: MAX_SCORE,
-      locale,
-      t,
-      tx,
-    });
+  const pdfNodeRef = useRef<HTMLDivElement>(null);
+  const [isGeneratingPdf, setIsGeneratingPdf] = useState(false);
+
+  const handleDownloadPdf = async () => {
+    if (!pdfNodeRef.current || isGeneratingPdf) return;
+    setIsGeneratingPdf(true);
+    try {
+      const dateSuffix = new Date().toISOString().slice(0, 10);
+      await renderNodeToPdf(
+        pdfNodeRef.current,
+        `orenda-result-${locale}-${dateSuffix}.pdf`,
+      );
+    } finally {
+      setIsGeneratingPdf(false);
+    }
   };
 
   return (
@@ -241,11 +248,12 @@ export function ResultScreen({ state, onRetake }: ResultScreenProps) {
         <motion.button
           type="button"
           onClick={handleDownloadPdf}
-          whileHover={{ scale: 1.02 }}
-          whileTap={{ scale: 0.98 }}
-          className="border-hairline text-ink-soft hover:border-sage-300 hover:text-ink inline-block rounded-full border bg-surface px-7 py-3.5 text-[15px] font-medium transition-colors"
+          disabled={isGeneratingPdf}
+          whileHover={isGeneratingPdf ? {} : { scale: 1.02 }}
+          whileTap={isGeneratingPdf ? {} : { scale: 0.98 }}
+          className="border-hairline text-ink-soft hover:border-sage-300 hover:text-ink inline-block rounded-full border bg-surface px-7 py-3.5 text-[15px] font-medium transition-colors disabled:cursor-wait disabled:opacity-60"
         >
-          {t("downloadPdf")}
+          {isGeneratingPdf ? t("downloadPdfPending") : t("downloadPdf")}
         </motion.button>
         <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
           <Link
@@ -264,6 +272,35 @@ export function ResultScreen({ state, onRetake }: ResultScreenProps) {
       >
         {t("disclaimer")}
       </motion.p>
+
+      {/* Off-screen but fully painted (not display:none, which html2canvas
+          cannot capture) — rasterized on demand when "Download PDF" is
+          clicked. See lib/pdf-export.ts. */}
+      <div
+        aria-hidden="true"
+        style={{ position: "fixed", top: 0, left: -99999, pointerEvents: "none" }}
+      >
+        <PdfExportTemplate
+          ref={pdfNodeRef}
+          state={state}
+          result={result}
+          resultTone={level.tone}
+          domainResults={domainResults}
+          topDomains={topDomains}
+          steadyDomains={steadyDomains}
+          showCrisis={showCrisis}
+          maxScore={MAX_SCORE}
+          locale={locale}
+          isRtl={isRtl}
+          t={t}
+          tx={tx}
+          generatedOn={new Date().toLocaleDateString(locale === "ar" ? "ar" : "en", {
+            year: "numeric",
+            month: "long",
+            day: "numeric",
+          })}
+        />
+      </div>
     </motion.main>
   );
 }

@@ -153,6 +153,7 @@ const UI = {
   retake: { en: "Take it again", ar: "إعادة التقييم" },
   backHome: { en: "Back to start", ar: "العودة إلى البداية" },
   downloadPdf: { en: "Download PDF", ar: "تنزيل PDF" },
+  downloadPdfPending: { en: "Preparing…", ar: "جارٍ التحضير…" },
 
   // Band names --------------------------------------------------------------
   bandSettled: { en: "Settled", ar: "مستقر" },
