@@ -13,6 +13,7 @@ import {
   selectTopDomains,
 } from "@/lib/assessment";
 import { MAX_SCORE } from "@/lib/questions";
+import { downloadResultPdf } from "@/lib/pdf-export";
 import type { AssessmentState, ResultTone } from "@/lib/types";
 
 /** International directory of crisis lines, filterable by country. */
@@ -43,7 +44,7 @@ interface ResultScreenProps {
 }
 
 export function ResultScreen({ state, onRetake }: ResultScreenProps) {
-  const { t, locale, isRtl } = useLanguage();
+  const { t, tx, locale, isRtl } = useLanguage();
 
   const level = getResultLevel(state.totalScore);
   const result = resolveResultLevel(level, locale);
@@ -51,6 +52,18 @@ export function ResultScreen({ state, onRetake }: ResultScreenProps) {
   const topDomains = selectTopDomains(state);
   const steadyDomains = selectSteadyDomains(state);
   const showCrisis = selectHasRiskFlag(state);
+
+  const handleDownloadPdf = () => {
+    downloadResultPdf({
+      state,
+      result,
+      domainResults,
+      maxScore: MAX_SCORE,
+      locale,
+      t,
+      tx,
+    });
+  };
 
   return (
     <motion.main
@@ -224,6 +237,15 @@ export function ResultScreen({ state, onRetake }: ResultScreenProps) {
           style={{ boxShadow: "var(--shadow-elevated)" }}
         >
           {t("retake")}
+        </motion.button>
+        <motion.button
+          type="button"
+          onClick={handleDownloadPdf}
+          whileHover={{ scale: 1.02 }}
+          whileTap={{ scale: 0.98 }}
+          className="border-hairline text-ink-soft hover:border-sage-300 hover:text-ink inline-block rounded-full border bg-surface px-7 py-3.5 text-[15px] font-medium transition-colors"
+        >
+          {t("downloadPdf")}
         </motion.button>
         <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
           <Link

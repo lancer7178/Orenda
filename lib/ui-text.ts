@@ -152,6 +152,7 @@ const UI = {
   resultNextStep: { en: "A next step", ar: "خطوة تالية" },
   retake: { en: "Take it again", ar: "إعادة التقييم" },
   backHome: { en: "Back to start", ar: "العودة إلى البداية" },
+  downloadPdf: { en: "Download PDF", ar: "تنزيل PDF" },
 
   // Band names --------------------------------------------------------------
   bandSettled: { en: "Settled", ar: "مستقر" },
