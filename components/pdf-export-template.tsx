@@ -125,7 +125,12 @@ export const PdfExportTemplate = forwardRef<HTMLDivElement, PdfExportTemplatePro
             color: COLOR.ink,
             fontFamily: bodyFont(isRtl),
             fontSize: 14,
-            lineHeight: 1.6,
+            // Arabic script needs more vertical room per line than Latin —
+            // the app's own CSS makes this same adjustment for Arabic body
+            // text (see html[lang="ar"] body in app/globals.css). Skipping it
+            // here left Arabic line-boxes too tight, so glyphs visually
+            // crowded into the line above.
+            lineHeight: isRtl ? 1.85 : 1.6,
             textAlign: "start",
           }}
         >
@@ -437,7 +442,13 @@ export const PdfExportTemplate = forwardRef<HTMLDivElement, PdfExportTemplatePro
           }}
         />
 
-        <div style={{ fontSize: 10.5, color: COLOR.inkMuted, lineHeight: 1.7 }}>
+        <div
+          style={{
+            fontSize: 10.5,
+            color: COLOR.inkMuted,
+            lineHeight: isRtl ? 1.95 : 1.7,
+          }}
+        >
           {t("disclaimer")}
         </div>
 
