@@ -1,4 +1,4 @@
-import { forwardRef } from "react";
+import { forwardRef, type CSSProperties } from "react";
 import type { AssessmentState, DomainResult, Locale, ResultLevel, ResultTone } from "@/lib/types";
 import type { Translator } from "@/lib/ui-text";
 
@@ -74,6 +74,22 @@ const bodyFont = (isRtl: boolean) =>
 const displayFont = (isRtl: boolean) =>
   isRtl ? "var(--font-arabic)" : "var(--font-display)";
 
+/**
+ * Small tracked-caps labels ("A NEXT STEP", "CARRYING THE MOST WEIGHT"). The
+ * letter-spacing and uppercasing are Latin-only conventions — on Arabic they
+ * break glyph joining (each letter renders in isolated form) and produce
+ * garbled-looking text, so both are skipped for `isRtl`.
+ */
+function eyebrowStyle(isRtl: boolean, color: string): CSSProperties {
+  return {
+    fontSize: 11,
+    fontWeight: 600,
+    letterSpacing: isRtl ? "normal" : 0.6,
+    textTransform: isRtl ? "none" : "uppercase",
+    color,
+  };
+}
+
 export const PdfExportTemplate = forwardRef<HTMLDivElement, PdfExportTemplateProps>(
   function PdfExportTemplate(
     {
@@ -98,17 +114,21 @@ export const PdfExportTemplate = forwardRef<HTMLDivElement, PdfExportTemplatePro
         ref={ref}
         dir={isRtl ? "rtl" : "ltr"}
         lang={locale}
-        style={{
-          width: 794,
-          padding: 48,
-          background: COLOR.surface,
-          color: COLOR.ink,
-          fontFamily: bodyFont(isRtl),
-          fontSize: 14,
-          lineHeight: 1.6,
-          textAlign: "start",
-        }}
+        style={{ width: 794, background: COLOR.surface }}
       >
+        {/* Tone-colored accent, echoing the score dial's ring color. */}
+        <div style={{ height: 6, background: TONE_HEX[resultTone] }} />
+
+        <div
+          style={{
+            padding: 48,
+            color: COLOR.ink,
+            fontFamily: bodyFont(isRtl),
+            fontSize: 14,
+            lineHeight: 1.6,
+            textAlign: "start",
+          }}
+        >
         {/* Header ------------------------------------------------------- */}
         <div
           style={{
@@ -270,14 +290,7 @@ export const PdfExportTemplate = forwardRef<HTMLDivElement, PdfExportTemplatePro
           }}
         >
           <div
-            style={{
-              fontSize: 11,
-              fontWeight: 600,
-              letterSpacing: 0.6,
-              textTransform: "uppercase",
-              color: COLOR.sage700,
-              marginBottom: 6,
-            }}
+            style={{ ...eyebrowStyle(isRtl, COLOR.sage700), marginBottom: 6 }}
           >
             {t("resultNextStep")}
           </div>
@@ -296,14 +309,7 @@ export const PdfExportTemplate = forwardRef<HTMLDivElement, PdfExportTemplatePro
         >
           <div style={{ flex: 1 }}>
             <div
-              style={{
-                fontSize: 11,
-                fontWeight: 600,
-                letterSpacing: 0.6,
-                textTransform: "uppercase",
-                color: COLOR.inkMuted,
-                marginBottom: 10,
-              }}
+              style={{ ...eyebrowStyle(isRtl, COLOR.inkMuted), marginBottom: 10 }}
             >
               {t("resultTopAreas")}
             </div>
@@ -317,14 +323,7 @@ export const PdfExportTemplate = forwardRef<HTMLDivElement, PdfExportTemplatePro
           </div>
           <div style={{ flex: 1 }}>
             <div
-              style={{
-                fontSize: 11,
-                fontWeight: 600,
-                letterSpacing: 0.6,
-                textTransform: "uppercase",
-                color: COLOR.inkMuted,
-                marginBottom: 10,
-              }}
+              style={{ ...eyebrowStyle(isRtl, COLOR.inkMuted), marginBottom: 10 }}
             >
               {t("resultSteadyAreas")}
             </div>
@@ -440,6 +439,47 @@ export const PdfExportTemplate = forwardRef<HTMLDivElement, PdfExportTemplatePro
 
         <div style={{ fontSize: 10.5, color: COLOR.inkMuted, lineHeight: 1.7 }}>
           {t("disclaimer")}
+        </div>
+
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: 8,
+            marginTop: 24,
+          }}
+        >
+          <div
+            style={{
+              width: 16,
+              height: 16,
+              borderRadius: 9999,
+              background: COLOR.sage100,
+              color: COLOR.sage700,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              flexShrink: 0,
+            }}
+          >
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              aria-hidden="true"
+              style={{ width: 9, height: 9 }}
+            >
+              <path d="M12 21.5V11" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" />
+              <path
+                d="M12 11.5c0-4.2 2.8-7.6 7-8.5.6 4.6-1.4 8.6-5.2 9.4-.7.2-1.3.1-1.8-.1a1.2 1.2 0 0 1 0-.8Z"
+                fill="currentColor"
+                fillOpacity="0.9"
+              />
+            </svg>
+          </div>
+          <span style={{ fontSize: 10.5, color: COLOR.inkMuted }}>
+            {t("brand")} — {t("privacyBadge")}
+          </span>
+        </div>
         </div>
       </div>
     );
