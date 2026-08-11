@@ -45,6 +45,10 @@ export function DomainProfile({ results }: { results: DomainResult[] }) {
           }}
           className="group rounded-2xl px-3 py-3 transition-all duration-300 hover:bg-sage-50/40"
         >
+          {/* Name + a worded band label. The level is carried by the label
+              text and the reading below — never by colour alone — and the raw
+              score is deliberately left off here: a "12 / 27" reads as a
+              medical statistic, which is exactly the register this page avoids. */}
           <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
             <h3 className="text-ink text-[15px] font-semibold">
               {tx(result.domain.name)}
@@ -53,9 +57,6 @@ export function DomainProfile({ results }: { results: DomainResult[] }) {
               className={`rounded-full border px-2.5 py-0.5 text-[11px] font-medium tracking-wide ${BAND_CHIP[result.band.id]}`}
             >
               {t.band(result.band.id)}
-            </span>
-            <span className="text-ink-muted ms-auto text-sm tabular-nums">
-              {result.score} / {result.maxScore}
             </span>
           </div>
 

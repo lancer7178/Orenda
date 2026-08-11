@@ -195,7 +195,11 @@ const UI = {
   resumeRestart: { en: "Start fresh", ar: "البدء من جديد" },
 
   // Result ------------------------------------------------------------------
-  resultEyebrow: { en: "What you reported", ar: "ما ذكرته" },
+  resultEyebrow: { en: "Your current picture", ar: "صورتك الحالية" },
+  resultSnapshot: {
+    en: "A snapshot of how things seem to be for you right now — not a verdict, and not a fixed state.",
+    ar: "لمحة عن حالك كما تبدو الآن — ليست حكماً، ولا حالة ثابتة.",
+  },
   resultScoreLabel: { en: "Total", ar: "المجموع" },
   resultOutOf: { en: "out of", ar: "من أصل" },
   resultProfile: {
@@ -203,17 +207,40 @@ const UI = {
     ar: "ملفك عبر المجالات التسعة",
   },
   resultTopAreas: {
-    en: "Carrying the most weight",
-    ar: "الأكثر حملاً للثقل",
+    en: "What may need some attention",
+    ar: "ما قد يحتاج إلى بعض الانتباه",
   },
   resultTopAreasNone: {
     en: "No single area came back elevated — the picture is even, and it is a settled one.",
     ar: "لم يظهر أي مجال بمفرده مرتفعاً — الصورة متوازنة، وهي صورة مستقرة.",
   },
-  resultSteadyAreas: { en: "Holding steady", ar: "ما يظل ثابتاً" },
+  resultSteadyAreas: { en: "What seems steady", ar: "ما يبدو ثابتاً" },
   resultSteadyNone: {
     en: "Every area registered some strain. That is worth taking seriously, and it is also worth knowing that breadth like this often lifts together once one part eases.",
     ar: "سجّل كل مجال قدراً من الضغط. هذا يستحق أن يُؤخذ بجدية، ويستحق أيضاً أن تعرف أن اتساعاً كهذا كثيراً ما ينحسر معاً بمجرد أن يخفّ أحد أجزائه.",
+  },
+
+  // Narrative summary lines — generated from the actual profile, never
+  // fabricated. {areas} is filled with a locale-correct list of section names.
+  attentionSentenceOne: {
+    en: "{areas} seems to be carrying the most weight right now.",
+    ar: "يبدو أن الثقل الأكبر يقع الآن على {areas}.",
+  },
+  attentionSentenceMany: {
+    en: "{areas} seem to be carrying more weight right now.",
+    ar: "يبدو أن ثقلاً أكبر يقع الآن على {areas}.",
+  },
+  steadySentenceOne: {
+    en: "{areas} appears to be holding relatively steady.",
+    ar: "يبدو أن {areas} من الجوانب الأكثر ثباتاً لديك الآن.",
+  },
+  steadySentenceFew: {
+    en: "{areas} appear to be holding relatively steady.",
+    ar: "يبدو أن {areas} من الجوانب الأكثر ثباتاً لديك الآن.",
+  },
+  steadySentenceMany: {
+    en: "{count} of the nine areas appear to be holding relatively steady — worth naming as intact, not just as the absence of difficulty.",
+    ar: "يبدو أن {count} من المجالات التسعة تحافظ على ثبات نسبي الآن — وهذا جزء حقيقي من الصورة، لا مجرد غياب للصعوبة.",
   },
   resultBreakdown: { en: "Section by section", ar: "قسماً بقسم" },
   resultNextStep: { en: "A next step", ar: "خطوة تالية" },

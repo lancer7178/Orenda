@@ -15,6 +15,7 @@ import {
   selectSteadyDomains,
   selectTopDomains,
 } from "@/lib/assessment";
+import { buildAttentionLine, buildSteadyLine } from "@/lib/results-narrative";
 import { MAX_SCORE } from "@/lib/questions";
 import { renderNodeToPdf } from "@/lib/pdf-export";
 import { HELPLINE_DIRECTORY } from "@/lib/resources";
@@ -53,6 +54,10 @@ export function ResultScreen({ state, onRetake }: ResultScreenProps) {
   const topDomains = selectTopDomains(state);
   const steadyDomains = selectSteadyDomains(state);
   const showCrisis = selectHasRiskFlag(state);
+  // Gentle, data-true summary sentences — null when there is nothing genuine
+  // to say, in which case the reassuring "none" copy takes over below.
+  const attentionLine = buildAttentionLine(topDomains, locale, t);
+  const steadyLine = buildSteadyLine(steadyDomains, locale, t);
 
   const pdfNodeRef = useRef<HTMLDivElement>(null);
   const [isGeneratingPdf, setIsGeneratingPdf] = useState(false);
@@ -124,13 +129,14 @@ export function ResultScreen({ state, onRetake }: ResultScreenProps) {
       ) : null}
 
       {/* Headline ------------------------------------------------------- */}
-      <motion.p
-        variants={rise}
-        transition={transition}
-        className="text-ink-muted text-sm tracking-wide"
-      >
-        {t("resultEyebrow")}
-      </motion.p>
+      <motion.div variants={rise} transition={transition}>
+        <p className="text-ink-muted text-sm tracking-wide">
+          {t("resultEyebrow")}
+        </p>
+        <p className="text-ink-soft mt-1.5 max-w-lg text-[15px] leading-relaxed text-pretty">
+          {t("resultSnapshot")}
+        </p>
+      </motion.div>
 
       <motion.div
         variants={rise}
@@ -167,11 +173,16 @@ export function ResultScreen({ state, onRetake }: ResultScreenProps) {
           <h2 className="text-ink-muted text-xs font-medium tracking-widest uppercase">
             {t("resultTopAreas")}
           </h2>
-          <div className="mt-4">
-            {topDomains.length > 0 ? (
-              <DomainChips results={topDomains} />
+          <div className="mt-4 space-y-3.5">
+            {attentionLine ? (
+              <>
+                <p className="text-ink text-[15px] leading-relaxed text-pretty">
+                  {attentionLine}
+                </p>
+                <DomainChips results={topDomains} />
+              </>
             ) : (
-              <p className="text-ink-soft text-sm leading-relaxed">
+              <p className="text-ink-soft text-sm leading-relaxed text-pretty">
                 {t("resultTopAreasNone")}
               </p>
             )}
@@ -182,11 +193,16 @@ export function ResultScreen({ state, onRetake }: ResultScreenProps) {
           <h2 className="text-ink-muted text-xs font-medium tracking-widest uppercase">
             {t("resultSteadyAreas")}
           </h2>
-          <div className="mt-4">
-            {steadyDomains.length > 0 ? (
-              <DomainChips results={steadyDomains} />
+          <div className="mt-4 space-y-3.5">
+            {steadyLine ? (
+              <>
+                <p className="text-ink text-[15px] leading-relaxed text-pretty">
+                  {steadyLine}
+                </p>
+                <DomainChips results={steadyDomains} />
+              </>
             ) : (
-              <p className="text-ink-soft text-sm leading-relaxed">
+              <p className="text-ink-soft text-sm leading-relaxed text-pretty">
                 {t("resultSteadyNone")}
               </p>
             )}

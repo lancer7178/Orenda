@@ -156,47 +156,6 @@ export function ScoreDial({
           {caption}
         </span>
       </div>
-
-      {/* Completion particle burst */}
-      <ParticleBurst tone={tone} ratio={ratio} />
     </div>
-  );
-}
-
-/** Tiny dots that radiate outward when the dial finishes drawing. */
-function ParticleBurst({ tone, ratio }: { tone: ResultTone; ratio: number }) {
-  if (ratio === 0) return null;
-
-  const particles = Array.from({ length: 6 }, (_, i) => {
-    const angle = (i / 6) * 2 * Math.PI - Math.PI / 2;
-    return {
-      x: Math.cos(angle) * 30,
-      y: Math.sin(angle) * 30,
-    };
-  });
-
-  return (
-    <>
-      {particles.map((p, i) => (
-        <motion.span
-          key={i}
-          aria-hidden="true"
-          initial={{ opacity: 0, x: 0, y: 0, scale: 1 }}
-          animate={{
-            opacity: [0, 0.8, 0],
-            x: p.x,
-            y: p.y,
-            scale: [0.5, 1, 0.3],
-          }}
-          transition={{
-            duration: 0.8,
-            delay: 1.8 + i * 0.06,
-            ease: "easeOut",
-          }}
-          className="pointer-events-none absolute h-1.5 w-1.5 rounded-full"
-          style={{ background: TONE_VAR[tone] }}
-        />
-      ))}
-    </>
   );
 }
