@@ -86,14 +86,25 @@
 --------------------------------------------------------------------------- */
 
 :root {
+  /* Page ground stays where it is — deep, soft, never pure black. The dark
+     polish is about readability and separation, not a brighter background, so
+     --dk-cream is deliberately untouched. */
   --dk-cream: #14161b;
   --dk-canvas: #191c22;
-  --dk-surface: #1e222a;
-  --dk-hairline: #313742;
+  /* Card surface lifted a step off the ground so a card reads as its own
+     surface, and the border lifted so structure is legible when looked for
+     (it carries the border-only cards and the /60–/70 dividers) without ever
+     glowing. */
+  --dk-surface: #21252e;
+  --dk-hairline: #3a414e;
 
-  --dk-ink: #e7e9ee;
-  --dk-ink-soft: #aeb6c2;
-  --dk-ink-muted: #7c8593;
+  /* Four warm-neutral reading tiers on the blue-charcoal ground — off-white
+     headings (never pure white), light body, readable secondary, and a muted
+     step reached via /60–/80 opacity for decorative metadata. Shifted off the
+     old cool blue-grey so long reads feel editorial, not like a dev console. */
+  --dk-ink: #f0f1ee;
+  --dk-ink-soft: #b6bab8;
+  --dk-ink-muted: #8e9491;
 
   --dk-sage-50: #1f2723;
   --dk-sage-100: #26302a;
@@ -148,9 +159,9 @@
     --color-tone-elevated: var(--dk-tone-elevated);
     --color-tone-high: var(--dk-tone-high);
 
-    --glass-bg-flat: rgba(30, 34, 42, 0.86);
-    --glass-bg: rgba(30, 34, 42, 0.55);
-    --glass-bg-hover: rgba(38, 44, 54, 0.82);
+    --glass-bg-flat: rgba(33, 38, 47, 0.92);
+    --glass-bg: rgba(33, 38, 47, 0.62);
+    --glass-bg-hover: rgba(42, 48, 59, 0.86);
     --frost-bg: color-mix(in oklab, var(--dk-cream) 78%, transparent);
     --shimmer-sheen: rgba(255, 255, 255, 0.08);
     --breath-core-a: rgba(147, 173, 159, 0.35);
