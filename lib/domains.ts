@@ -43,6 +43,10 @@ export const DOMAINS: Domain[] = [
       ar: "كيف صمد مزاجك وطاقتك واهتمامك بالأشياء في الفترة الأخيرة.",
     },
     instrument: { en: "Based on the PHQ-9", ar: "مبني على مقياس PHQ-9" },
+    about: {
+      en: "The PHQ-9 is a nine-item screener used widely in clinics to gauge how often low mood, low energy, and loss of interest have shown up over the last two weeks.",
+      ar: "PHQ-9 مقياس من تسعة بنود يُستخدم على نطاق واسع في العيادات لقياس كم مرة ظهر انخفاض المزاج والطاقة وفقدان الاهتمام خلال الأسبوعين الماضيين.",
+    },
     prompt: TWO_WEEK_FREQUENCY,
     bands: bands({
       settled: {
@@ -74,6 +78,10 @@ export const DOMAINS: Domain[] = [
       ar: "القلق والتوتر، وذلك الجزء منك الذي يبقى متأهباً لشيء ما.",
     },
     instrument: { en: "Based on the GAD-7", ar: "مبني على مقياس GAD-7" },
+    about: {
+      en: "The GAD-7 is a seven-item screener for how often worry, tension, and restlessness have been present recently.",
+      ar: "GAD-7 مقياس من سبعة بنود لقياس كم مرة حضر القلق والتوتر والتململ مؤخراً.",
+    },
     prompt: TWO_WEEK_FREQUENCY,
     bands: bands({
       settled: {
@@ -107,6 +115,10 @@ export const DOMAINS: Domain[] = [
     instrument: {
       en: "Based on the Perceived Stress Scale",
       ar: "مبني على مقياس الضغط المُدرَك",
+    },
+    about: {
+      en: "The Perceived Stress Scale asks how unpredictable, uncontrollable, and overloaded life has felt over the past month — stress as you experience it, not as a list of events.",
+      ar: "مقياس الضغط المُدرَك يسأل إلى أي حد بدت الحياة غير متوقعة وغير قابلة للتحكّم ومُثقلة خلال الشهر الماضي — الضغط كما تعيشه، لا كقائمة أحداث.",
     },
     prompt: {
       en: "In the last month, how often have you felt…",
@@ -145,6 +157,10 @@ export const DOMAINS: Domain[] = [
       en: "Based on the Insomnia Severity Index",
       ar: "مبني على مؤشر شدة الأرق",
     },
+    about: {
+      en: "The Insomnia Severity Index looks at how much difficulty falling asleep, staying asleep, and feeling rested has been affecting you.",
+      ar: "مؤشر شدة الأرق ينظر إلى مدى تأثير صعوبة الخلود إلى النوم والاستمرار فيه والشعور بالراحة عليك.",
+    },
     prompt: {
       en: "Over the last two weeks, how much of a problem has this been…",
       ar: "خلال الأسبوعين الماضيين، إلى أي حد شكّل هذا مشكلة…",
@@ -179,6 +195,10 @@ export const DOMAINS: Domain[] = [
       ar: "أعراض جسدية كثيراً ما يتبيّن أنها تحمل ثِقَلاً عاطفياً.",
     },
     instrument: { en: "Based on the PHQ-15", ar: "مبني على مقياس PHQ-15" },
+    about: {
+      en: "The PHQ-15 screens for physical symptoms — aches, fatigue, stomach trouble — that often carry emotional weight alongside any medical cause.",
+      ar: "PHQ-15 يقيس الأعراض الجسدية — الآلام والإرهاق واضطراب المعدة — التي كثيراً ما تحمل ثِقَلاً عاطفياً إلى جانب أي سبب طبي.",
+    },
     prompt: {
       en: "Over the last two weeks, how much have you been bothered by…",
       ar: "خلال الأسبوعين الماضيين، إلى أي حد أزعجك…",
@@ -215,6 +235,10 @@ export const DOMAINS: Domain[] = [
     instrument: {
       en: "Based on the UCLA Loneliness Scale",
       ar: "مبني على مقياس الوحدة UCLA",
+    },
+    about: {
+      en: "The UCLA Loneliness Scale asks about closeness and belonging — how reachable you feel by the people around you.",
+      ar: "مقياس الوحدة UCLA يسأل عن القرب والانتماء — إلى أي حد تشعر أن من حولك يمكنهم الوصول إليك.",
     },
     prompt: {
       en: "In the last month, how often have you felt…",
@@ -253,6 +277,10 @@ export const DOMAINS: Domain[] = [
       en: "Based on the Rosenberg Self-Esteem Scale",
       ar: "مبني على مقياس روزنبرغ لتقدير الذات",
     },
+    about: {
+      en: "The Rosenberg Self-Esteem Scale gauges how fairly and steadily you tend to regard yourself.",
+      ar: "مقياس روزنبرغ لتقدير الذات يقيس مدى إنصافك واستقرارك في نظرتك إلى نفسك.",
+    },
     prompt: AGREEMENT_PROMPT,
     bands: bands({
       settled: {
@@ -284,6 +312,10 @@ export const DOMAINS: Domain[] = [
       ar: "إلى أي مدى يمتد كل هذا إلى العمل والبيت والأمور الاعتيادية.",
     },
     instrument: { en: "Based on the WHODAS 2.0", ar: "مبني على مقياس WHODAS 2.0" },
+    about: {
+      en: "The WHODAS 2.0 asks how much difficulties have interfered with everyday life — work, home, and the ordinary things.",
+      ar: "WHODAS 2.0 يسأل إلى أي حد أعاقت الصعوبات حياتك اليومية — العمل والبيت والأمور الاعتيادية.",
+    },
     prompt: {
       en: "In the last two weeks, how much did difficulties interfere with…",
       ar: "خلال الأسبوعين الماضيين، إلى أي حد أعاقتك الصعوبات في…",
@@ -320,6 +352,10 @@ export const DOMAINS: Domain[] = [
     instrument: {
       en: "Based on the Brief Resilience Scale",
       ar: "مبني على مقياس المرونة المختصر",
+    },
+    about: {
+      en: "The Brief Resilience Scale measures something different from the others — how well you tend to bounce back. These items are about your strengths.",
+      ar: "مقياس المرونة المختصر يقيس شيئاً مختلفاً عن البقية — مدى قدرتك على النهوض مجدداً. هذه البنود عن نقاط قوتك.",
     },
     prompt: AGREEMENT_PROMPT,
     isReverseScored: true,

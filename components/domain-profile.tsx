@@ -8,21 +8,17 @@ import type { BandId, DomainResult } from "@/lib/types";
  * Four steps on one warm ramp — sage, sand, terracotta, clay. Written as full
  * class names so Tailwind can see them at build time.
  */
-const BAND_BAR: Record<BandId, string> = {
-  settled: "bg-tone-steady",
-  noticeable: "bg-tone-moderate",
-  elevated: "bg-tone-elevated",
-  high: "bg-tone-high",
-};
-
+// Both stops derive from the tone token so the bar tracks the active theme —
+// the lighter stop is the same tone mixed toward transparent, not a baked-in
+// light-mode rgba that would stay put when the palette flips to dark.
 const BAND_GRADIENT: Record<BandId, string> = {
   settled:
-    "linear-gradient(90deg, rgba(141,163,153,0.7), var(--color-tone-steady))",
+    "linear-gradient(90deg, color-mix(in oklab, var(--color-tone-steady) 70%, transparent), var(--color-tone-steady))",
   noticeable:
-    "linear-gradient(90deg, rgba(183,154,109,0.7), var(--color-tone-moderate))",
+    "linear-gradient(90deg, color-mix(in oklab, var(--color-tone-moderate) 70%, transparent), var(--color-tone-moderate))",
   elevated:
-    "linear-gradient(90deg, rgba(191,138,114,0.7), var(--color-tone-elevated))",
-  high: "linear-gradient(90deg, rgba(169,112,122,0.7), var(--color-tone-high))",
+    "linear-gradient(90deg, color-mix(in oklab, var(--color-tone-elevated) 70%, transparent), var(--color-tone-elevated))",
+  high: "linear-gradient(90deg, color-mix(in oklab, var(--color-tone-high) 70%, transparent), var(--color-tone-high))",
 };
 
 const BAND_CHIP: Record<BandId, string> = {
@@ -83,6 +79,36 @@ export function DomainProfile({ results }: { results: DomainResult[] }) {
           <p className="text-ink-muted/80 mt-1.5 text-xs">
             {tx(result.domain.instrument)}
           </p>
+
+          {/* Native <details> so the disclosure is keyboard- and
+              screen-reader-accessible for free, and needs no client state. */}
+          <details className="group/why mt-2.5">
+            <summary className="text-ink-muted hover:text-sage-600 inline-flex cursor-pointer list-none items-center gap-1.5 text-xs transition-colors [&::-webkit-details-marker]:hidden">
+              <svg
+                viewBox="0 0 12 12"
+                fill="none"
+                aria-hidden="true"
+                className="h-3 w-3 transition-transform duration-300 group-open/why:rotate-90 rtl:group-open/why:-rotate-90"
+              >
+                <path
+                  d="M4.5 2.5 8 6l-3.5 3.5"
+                  stroke="currentColor"
+                  strokeWidth="1.4"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+              {t("whyTitle")}
+            </summary>
+            <div className="border-sage-200/50 mt-2.5 border-s-2 ps-3.5">
+              <p className="text-ink-soft text-xs leading-relaxed text-pretty">
+                {tx(result.domain.about)}
+              </p>
+              <p className="text-ink-muted mt-2 text-xs leading-relaxed text-pretty">
+                {t("whyScreeningNote")}
+              </p>
+            </div>
+          </details>
         </motion.li>
       ))}
     </ul>

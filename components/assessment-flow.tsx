@@ -137,6 +137,74 @@ export function AssessmentFlow() {
     setResume("resolved");
   }, []);
 
+  const resumePromptOpen =
+    resume === "pending" && savedState !== null && !returningFromPause;
+
+  // Arrow-key navigation, mirrored for reading direction: the key that points
+  // toward the start goes back, the key that points forward advances. Forward
+  // only moves through questions already answered — it never skips one blank —
+  // and Enter doubles as "continue". Number-key answering lives in the card;
+  // this handler deliberately leaves digits alone so the two never collide.
+  useEffect(() => {
+    if (state.isCompleted || resumePromptOpen) return;
+
+    const forwardKey = isRtl ? "ArrowLeft" : "ArrowRight";
+    const backKey = isRtl ? "ArrowRight" : "ArrowLeft";
+
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.metaKey || event.ctrlKey || event.altKey) return;
+      if (pendingScore !== null) return;
+
+      const target = event.target as HTMLElement | null;
+      if (
+        target &&
+        (target.isContentEditable ||
+          ["INPUT", "TEXTAREA", "SELECT"].includes(target.tagName))
+      ) {
+        return;
+      }
+
+      // Section opener: forward / Enter begins it, back steps out.
+      if (state.pendingSectionIntro !== null) {
+        if (event.key === forwardKey || event.key === "Enter") {
+          event.preventDefault();
+          dispatch({ type: "dismissIntro" });
+        } else if (event.key === backKey && state.currentQuestionIndex > 0) {
+          event.preventDefault();
+          handleBack();
+        }
+        return;
+      }
+
+      if (event.key === backKey) {
+        if (state.currentQuestionIndex > 0) {
+          event.preventDefault();
+          handleBack();
+        }
+        return;
+      }
+
+      if (event.key === forwardKey || event.key === "Enter") {
+        const current = QUESTIONS[state.currentQuestionIndex];
+        const existing = state.answersRecord[current.id];
+        if (existing !== undefined) {
+          event.preventDefault();
+          handleSelect(existing);
+        }
+      }
+    };
+
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [
+    state,
+    pendingScore,
+    isRtl,
+    resumePromptOpen,
+    handleBack,
+    handleSelect,
+  ]);
+
   // Returning from a breathing break restores in place instead of asking.
   // Adjusting state during render is the supported React pattern for this;
   // the guards mean it can run at most once.

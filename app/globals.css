@@ -55,16 +55,164 @@
   --shadow-elevated: 0 8px 30px -4px rgba(74, 92, 82, 0.1),
     0 4px 12px -2px rgba(74, 92, 82, 0.06);
   --shadow-glow-sage: 0 0 40px -8px rgba(119, 144, 127, 0.25);
+
+  /* Compositable surfaces — tokenised so the two themes can each supply their
+     own translucent fill. Never hard-code these colours in a component: a
+     literal white rgba() cannot follow the page into the dark. */
+  --glass-bg-flat: rgba(255, 254, 252, 0.86);
+  --glass-bg: rgba(255, 254, 252, 0.6);
+  --glass-bg-hover: rgba(255, 254, 252, 0.8);
+  --frost-bg: color-mix(in oklab, var(--color-cream) 80%, transparent);
+  --shimmer-sheen: rgba(255, 255, 255, 0.35);
+  --breath-core-a: rgba(255, 254, 252, 0.75);
+  --breath-core-b: rgba(255, 254, 252, 0.4);
+}
+
+/* ---------------------------------------------------------------------------
+   Dark theme
+
+   The brief asks for a second surface that keeps the same calm identity: a
+   deep blue-charcoal, soft off-white text (never pure white), restrained sage
+   accents, no neon. The palette values live once in `--dk-*` below; the two
+   activation blocks (system preference, and the explicit header toggle) only
+   remap the semantic `--color-*` tokens onto them, so there is a single source
+   of truth for every dark colour.
+
+   The sage ramp is re-pitched rather than simply inverted: 50–200 become dark
+   sage-tinted surfaces and borders, 300–400 stay mid accents, 500 stays the
+   brand fill that carries white button text, and 600–700 become light sage
+   text. That keeps `bg-sage-50` a surface and `text-sage-700` a label in both
+   themes without touching a single className.
+--------------------------------------------------------------------------- */
+
+:root {
+  --dk-cream: #14161b;
+  --dk-canvas: #191c22;
+  --dk-surface: #1e222a;
+  --dk-hairline: #313742;
+
+  --dk-ink: #e7e9ee;
+  --dk-ink-soft: #aeb6c2;
+  --dk-ink-muted: #7c8593;
+
+  --dk-sage-50: #1f2723;
+  --dk-sage-100: #26302a;
+  --dk-sage-200: #36443c;
+  --dk-sage-300: #5a7365;
+  --dk-sage-400: #7f978a;
+  --dk-sage-500: #6f8a79;
+  --dk-sage-600: #93ad9f;
+  --dk-sage-700: #bdd1c6;
+
+  --dk-indigo-soft: #8593a8;
+  --dk-indigo-softer: #2a3140;
+
+  /* Result tones — nudged a touch lighter so they hold on the dark surface
+     while staying the same warm, non-alarming hues. */
+  --dk-tone-steady: #93aca0;
+  --dk-tone-mild: #8aa6b0;
+  --dk-tone-moderate: #c6a878;
+  --dk-tone-elevated: #cc9680;
+  --dk-tone-high: #ba828c;
+}
+
+/* Activation — system preference (unless the header toggle forced light). */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+
+    --color-cream: var(--dk-cream);
+    --color-canvas: var(--dk-canvas);
+    --color-surface: var(--dk-surface);
+    --color-hairline: var(--dk-hairline);
+
+    --color-ink: var(--dk-ink);
+    --color-ink-soft: var(--dk-ink-soft);
+    --color-ink-muted: var(--dk-ink-muted);
+
+    --color-sage-50: var(--dk-sage-50);
+    --color-sage-100: var(--dk-sage-100);
+    --color-sage-200: var(--dk-sage-200);
+    --color-sage-300: var(--dk-sage-300);
+    --color-sage-400: var(--dk-sage-400);
+    --color-sage-500: var(--dk-sage-500);
+    --color-sage-600: var(--dk-sage-600);
+    --color-sage-700: var(--dk-sage-700);
+
+    --color-indigo-soft: var(--dk-indigo-soft);
+    --color-indigo-softer: var(--dk-indigo-softer);
+
+    --color-tone-steady: var(--dk-tone-steady);
+    --color-tone-mild: var(--dk-tone-mild);
+    --color-tone-moderate: var(--dk-tone-moderate);
+    --color-tone-elevated: var(--dk-tone-elevated);
+    --color-tone-high: var(--dk-tone-high);
+
+    --glass-bg-flat: rgba(30, 34, 42, 0.86);
+    --glass-bg: rgba(30, 34, 42, 0.55);
+    --glass-bg-hover: rgba(38, 44, 54, 0.82);
+    --frost-bg: color-mix(in oklab, var(--dk-cream) 78%, transparent);
+    --shimmer-sheen: rgba(255, 255, 255, 0.08);
+    --breath-core-a: rgba(147, 173, 159, 0.35);
+    --breath-core-b: rgba(147, 173, 159, 0.12);
+
+    --shadow-soft: 0 2px 12px -2px rgba(0, 0, 0, 0.4),
+      0 1px 4px -1px rgba(0, 0, 0, 0.3);
+    --shadow-elevated: 0 10px 34px -6px rgba(0, 0, 0, 0.55),
+      0 4px 12px -2px rgba(0, 0, 0, 0.4);
+    --shadow-glow-sage: 0 0 44px -10px rgba(111, 138, 121, 0.4);
+  }
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+
+  --color-cream: var(--dk-cream);
+  --color-canvas: var(--dk-canvas);
+  --color-surface: var(--dk-surface);
+  --color-hairline: var(--dk-hairline);
+
+  --color-ink: var(--dk-ink);
+  --color-ink-soft: var(--dk-ink-soft);
+  --color-ink-muted: var(--dk-ink-muted);
+
+  --color-sage-50: var(--dk-sage-50);
+  --color-sage-100: var(--dk-sage-100);
+  --color-sage-200: var(--dk-sage-200);
+  --color-sage-300: var(--dk-sage-300);
+  --color-sage-400: var(--dk-sage-400);
+  --color-sage-500: var(--dk-sage-500);
+  --color-sage-600: var(--dk-sage-600);
+  --color-sage-700: var(--dk-sage-700);
+
+  --color-indigo-soft: var(--dk-indigo-soft);
+  --color-indigo-softer: var(--dk-indigo-softer);
+
+  --color-tone-steady: var(--dk-tone-steady);
+  --color-tone-mild: var(--dk-tone-mild);
+  --color-tone-moderate: var(--dk-tone-moderate);
+  --color-tone-elevated: var(--dk-tone-elevated);
+  --color-tone-high: var(--dk-tone-high);
+
+  --glass-bg-flat: rgba(30, 34, 42, 0.86);
+  --glass-bg: rgba(30, 34, 42, 0.55);
+  --glass-bg-hover: rgba(38, 44, 54, 0.82);
+  --frost-bg: color-mix(in oklab, var(--dk-cream) 78%, transparent);
+  --shimmer-sheen: rgba(255, 255, 255, 0.08);
+  --breath-core-a: rgba(147, 173, 159, 0.35);
+  --breath-core-b: rgba(147, 173, 159, 0.12);
+
+  --shadow-soft: 0 2px 12px -2px rgba(0, 0, 0, 0.4),
+    0 1px 4px -1px rgba(0, 0, 0, 0.3);
+  --shadow-elevated: 0 10px 34px -6px rgba(0, 0, 0, 0.55),
+    0 4px 12px -2px rgba(0, 0, 0, 0.4);
+  --shadow-glow-sage: 0 0 44px -10px rgba(111, 138, 121, 0.4);
 }
 
 /* --------------------------------------------------------------------------- */
 
-:root {
-  color-scheme: light;
-}
-
 html {
-  /* The spec calls for one calm reading surface; the app never inverts. */
+  /* Both themes share one calm reading surface; the token supplies which one. */
   background-color: var(--color-cream);
 }
 
@@ -164,7 +312,7 @@ html[lang="ar"] .font-display {
   background: linear-gradient(
     90deg,
     transparent 0%,
-    rgba(255, 255, 255, 0.35) 50%,
+    var(--shimmer-sheen) 50%,
     transparent 100%
   );
   animation: shimmer 3s ease-in-out infinite;
@@ -218,7 +366,7 @@ html[lang="ar"] .font-display {
    fifty-five times in a row. Touch devices get a denser flat surface instead —
    against a cream wash the two are nearly indistinguishable. */
 .glass-card {
-  background: rgba(255, 254, 252, 0.86);
+  background: var(--glass-bg-flat);
   border: 1px solid color-mix(in oklab, var(--color-hairline) 70%, transparent);
 }
 
@@ -227,7 +375,7 @@ html[lang="ar"] .font-display {
    Firefox. */
 @media (pointer: fine) {
   .glass-card {
-    background: rgba(255, 254, 252, 0.6);
+    background: var(--glass-bg);
     -webkit-backdrop-filter: blur(12px) saturate(1.3);
     backdrop-filter: blur(12px) saturate(1.3);
   }
@@ -245,7 +393,7 @@ html[lang="ar"] .font-display {
 
 @media (pointer: fine) {
   .orenda-frost {
-    background-color: color-mix(in oklab, var(--color-cream) 80%, transparent);
+    background-color: var(--frost-bg);
     -webkit-backdrop-filter: blur(20px) saturate(1.4);
     backdrop-filter: blur(20px) saturate(1.4);
   }
@@ -256,7 +404,7 @@ html[lang="ar"] .font-display {
 }
 
 .glass-card-hover:hover {
-  background: rgba(255, 254, 252, 0.8);
+  background: var(--glass-bg-hover);
   box-shadow: var(--shadow-elevated);
   transform: translateY(-2px);
   border-color: color-mix(in oklab, var(--color-sage-300) 50%, transparent);

@@ -40,7 +40,7 @@ export function ProgressBar({ value, label }: ProgressBarProps) {
             className="absolute inset-0"
             style={{
               background:
-                "linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.35) 50%, transparent 100%)",
+                "linear-gradient(90deg, transparent 0%, var(--shimmer-sheen) 50%, transparent 100%)",
               animation: "shimmer 3s ease-in-out infinite",
             }}
           />

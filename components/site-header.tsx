@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { motion } from "motion/react";
 import { useLanguage } from "./language-provider";
+import { useTheme } from "./theme-provider";
 import lockup from "@/public/orenda-lockup.png";
 import type { Locale } from "@/lib/types";
 
@@ -24,6 +25,35 @@ function LockIcon({ className }: { className?: string }) {
         stroke="currentColor"
         strokeWidth="1.2"
         strokeLinecap="round"
+      />
+    </svg>
+  );
+}
+
+/** Sun — shown in dark mode; tapping returns to the light surface. */
+function SunIcon({ className }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 16 16" fill="none" aria-hidden="true" className={className}>
+      <circle cx="8" cy="8" r="3" stroke="currentColor" strokeWidth="1.2" />
+      <path
+        d="M8 1.5v1.4M8 13.1v1.4M14.5 8h-1.4M2.9 8H1.5M12.6 3.4l-1 1M4.4 11.6l-1 1M12.6 12.6l-1-1M4.4 4.4l-1-1"
+        stroke="currentColor"
+        strokeWidth="1.2"
+        strokeLinecap="round"
+      />
+    </svg>
+  );
+}
+
+/** Crescent moon — shown in light mode; tapping moves to the dark surface. */
+function MoonIcon({ className }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 16 16" fill="none" aria-hidden="true" className={className}>
+      <path
+        d="M13.2 9.4A5.2 5.2 0 0 1 6.6 2.8a5.4 5.4 0 1 0 6.6 6.6Z"
+        stroke="currentColor"
+        strokeWidth="1.2"
+        strokeLinejoin="round"
       />
     </svg>
   );
@@ -51,6 +81,8 @@ const LANGUAGES: Array<{ code: Locale; short: string; name: string }> = [
 
 export function SiteHeader() {
   const { t, locale, setLocale } = useLanguage();
+  const { resolved, toggle } = useTheme();
+  const isDark = resolved === "dark";
 
   return (
     <motion.header
@@ -106,6 +138,28 @@ export function SiteHeader() {
               <BreathIcon className="h-4 w-4 sm:h-3.5 sm:w-3.5" />
               <span className="hidden sm:inline">{t("pauseCta")}</span>
             </Link>
+
+            <button
+              type="button"
+              onClick={toggle}
+              aria-label={isDark ? t("themeToLight") : t("themeToDark")}
+              title={isDark ? t("themeToLight") : t("themeToDark")}
+              className="border-hairline/60 text-ink-muted hover:text-ink hover:border-sage-300/70 inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full border bg-surface/60 transition-colors duration-300"
+            >
+              <motion.span
+                key={isDark ? "sun" : "moon"}
+                initial={{ opacity: 0, rotate: -45, scale: 0.7 }}
+                animate={{ opacity: 1, rotate: 0, scale: 1 }}
+                transition={{ duration: 0.4, ease: [0.22, 0.61, 0.36, 1] }}
+                className="inline-flex"
+              >
+                {isDark ? (
+                  <SunIcon className="h-4 w-4" />
+                ) : (
+                  <MoonIcon className="h-4 w-4" />
+                )}
+              </motion.span>
+            </button>
 
             <div
               role="group"

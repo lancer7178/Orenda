@@ -5,6 +5,7 @@ import { motion, useScroll, useTransform } from "motion/react";
 import { useRef, useSyncExternalStore } from "react";
 import { useLanguage } from "./language-provider";
 import { LeafMark } from "./leaf-mark";
+import { EraseEverything } from "./erase-everything";
 import { DOMAINS } from "@/lib/domains";
 import { QUESTION_COUNT_BY_DOMAIN } from "@/lib/questions";
 import type { UIKey } from "@/lib/ui-text";
@@ -27,11 +28,26 @@ const PRINCIPLES: Array<{ title: UIKey; body: UIKey }> = [
   { title: "principleThreeTitle", body: "principleThreeBody" },
 ];
 
+const PRIVACY_POINTS: Array<{ title: UIKey; body: UIKey }> = [
+  { title: "privacyNoAccountTitle", body: "privacyNoAccountBody" },
+  { title: "privacyNoCloudTitle", body: "privacyNoCloudBody" },
+  { title: "privacyNoTrackingTitle", body: "privacyNoTrackingBody" },
+  { title: "privacyNoSharingTitle", body: "privacyNoSharingBody" },
+];
+
+const NOT_ITEMS: Array<{ title: UIKey; body: UIKey }> = [
+  { title: "notDiagnosisTitle", body: "notDiagnosisBody" },
+  { title: "notTherapyTitle", body: "notTherapyBody" },
+  { title: "notLabelTitle", body: "notLabelBody" },
+];
+
+// The last-two-weeks framing leads; the question count stays available but
+// last, so it informs without becoming the headline the brief warns against.
 const META: UIKey[] = [
-  "landingMetaQuestions",
   "landingMetaAreas",
   "landingMetaTime",
-  "landingMetaNoTimer",
+  "landingMetaOneAtATime",
+  "landingMetaQuestions",
 ];
 
 /* Tailwind's `md`, so the mount and the CSS agree on one breakpoint. */
@@ -285,6 +301,158 @@ export function LandingScreen() {
           ))}
         </motion.ul>
 
+        {/* Privacy — a pillar, not a footnote -------------------------------- */}
+        <motion.section
+          initial="hidden"
+          whileInView="show"
+          viewport={{ once: true, margin: "-80px" }}
+          variants={container}
+          className="border-hairline/70 mt-16 border-t pt-10"
+        >
+          <motion.h2
+            variants={rise}
+            transition={transition}
+            className="font-display text-ink text-2xl font-semibold tracking-tight"
+          >
+            {t("privacyTitle")}
+          </motion.h2>
+          <motion.p
+            variants={rise}
+            transition={transition}
+            className="text-ink-soft mt-3 max-w-xl text-[15px] leading-relaxed text-pretty"
+          >
+            {t("privacyLede")}
+          </motion.p>
+
+          <ul className="mt-8 grid gap-4 sm:grid-cols-2">
+            {PRIVACY_POINTS.map((point, index) => (
+              <motion.li
+                key={point.title}
+                variants={rise}
+                transition={{ ...transition, delay: index * 0.06 }}
+                className="border-hairline/60 bg-surface/40 rounded-2xl border p-5"
+              >
+                <div className="flex items-start gap-3">
+                  <span className="bg-sage-100 text-sage-600 mt-0.5 inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-full">
+                    <LeafMark className="h-3.5 w-3.5" />
+                  </span>
+                  <div>
+                    <h3 className="text-ink text-[15px] font-semibold">
+                      {t(point.title)}
+                    </h3>
+                    <p className="text-ink-soft mt-1 text-sm leading-relaxed">
+                      {t(point.body)}
+                    </p>
+                  </div>
+                </div>
+              </motion.li>
+            ))}
+          </ul>
+
+          <motion.div
+            variants={rise}
+            transition={transition}
+            className="mt-6"
+          >
+            <EraseEverything />
+          </motion.div>
+        </motion.section>
+
+        {/* What Orenda isn't -------------------------------------------------- */}
+        <motion.section
+          initial="hidden"
+          whileInView="show"
+          viewport={{ once: true, margin: "-80px" }}
+          variants={container}
+          className="border-hairline/70 mt-16 border-t pt-10"
+        >
+          <motion.h2
+            variants={rise}
+            transition={transition}
+            className="font-display text-ink text-2xl font-semibold tracking-tight"
+          >
+            {t("notTitle")}
+          </motion.h2>
+
+          <ul className="mt-8 grid gap-4 sm:grid-cols-3">
+            {NOT_ITEMS.map((notItem, index) => (
+              <motion.li
+                key={notItem.title}
+                variants={rise}
+                transition={{ ...transition, delay: index * 0.08 }}
+                className="border-hairline/60 rounded-2xl border p-5"
+              >
+                <h3 className="text-ink flex items-baseline gap-2 text-[15px] font-semibold">
+                  <span className="text-ink-muted/60" aria-hidden="true">
+                    ✕
+                  </span>
+                  {t(notItem.title)}
+                </h3>
+                <p className="text-ink-soft mt-2 text-sm leading-relaxed">
+                  {t(notItem.body)}
+                </p>
+              </motion.li>
+            ))}
+          </ul>
+        </motion.section>
+
+        {/* A profile, not a label — the closing statement -------------------- */}
+        <motion.section
+          initial="hidden"
+          whileInView="show"
+          viewport={{ once: true, margin: "-80px" }}
+          variants={container}
+          className="mt-20 flex flex-col items-center text-center"
+        >
+          <motion.div
+            variants={rise}
+            transition={transition}
+            aria-hidden="true"
+            className="text-sage-300 mb-6"
+          >
+            <LeafMark className="h-7 w-7 orenda-float" />
+          </motion.div>
+          <motion.h2
+            variants={rise}
+            transition={transition}
+            className="font-display text-ink text-3xl font-semibold tracking-tight text-balance sm:text-4xl"
+          >
+            {t("closerTitle")}
+          </motion.h2>
+          <motion.p
+            variants={rise}
+            transition={transition}
+            className="text-ink-soft mt-4 max-w-md text-[15px] leading-relaxed text-pretty"
+          >
+            {t("closerBody")}
+          </motion.p>
+          <motion.div variants={rise} transition={transition} className="mt-9">
+            <Link
+              href="/assessment"
+              className="group bg-sage-500 hover:bg-sage-600 inline-flex items-center gap-3 rounded-full px-8 py-4 text-base font-medium text-white transition-all duration-300 hover:-translate-y-0.5"
+              style={{ boxShadow: "var(--shadow-elevated)" }}
+            >
+              {t("startCta")}
+              <svg
+                viewBox="0 0 20 20"
+                fill="none"
+                aria-hidden="true"
+                className={`h-4 w-4 transition-transform duration-300 group-hover:translate-x-1 ${
+                  isRtl ? "-scale-x-100 group-hover:-translate-x-1" : ""
+                }`}
+              >
+                <path
+                  d="M4 10h11m0 0-4-4m4 4-4 4"
+                  stroke="currentColor"
+                  strokeWidth="1.6"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+            </Link>
+          </motion.div>
+        </motion.section>
+
         <footer className="border-hairline/70 mt-16 border-t pt-8">
           {/* Decorative leaf cluster */}
           <div
@@ -355,7 +523,7 @@ function HeroVisual() {
         className="border-sage-200/70 absolute inset-[19%] rounded-full border"
         style={{
           background:
-            "radial-gradient(circle at center, rgba(255,254,252,0.3), transparent 70%)",
+            "radial-gradient(circle at center, var(--breath-core-b), transparent 70%)",
         }}
       />
 

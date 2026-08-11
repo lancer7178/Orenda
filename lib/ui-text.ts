@@ -28,8 +28,12 @@ const UI = {
   },
   landingMetaQuestions: { en: "55 questions", ar: "٥٥ سؤالاً" },
   landingMetaAreas: { en: "9 areas", ar: "٩ مجالات" },
-  landingMetaTime: { en: "about 10 minutes", ar: "نحو ١٠ دقائق" },
+  landingMetaTime: { en: "~10 min", ar: "نحو ١٠ دقائق" },
   landingMetaNoTimer: { en: "no timer", ar: "بلا مؤقّت" },
+  landingMetaOneAtATime: {
+    en: "one question at a time",
+    ar: "سؤال واحد في كل مرة",
+  },
 
   landingCoverageTitle: {
     en: "What this covers",
@@ -57,6 +61,69 @@ const UI = {
   principleThreeBody: {
     en: "The result maps where the weight sits across all nine areas — including what is holding steady — and suggests a next step. Never a verdict about who you are.",
     ar: "ترسم النتيجة أين يتركّز الثقل عبر المجالات التسعة — بما في ذلك ما يظل ثابتاً — وتقترح خطوة تالية. وليست حكماً على من تكون.",
+  },
+
+  // Landing — privacy pillar ------------------------------------------------
+  privacyTitle: { en: "Private by design", ar: "خصوصية بالتصميم" },
+  privacyLede: {
+    en: "Privacy here is not a policy you have to trust — it is the way the app is built. Your answers are scored where you sit, and your profile never leaves this device.",
+    ar: "الخصوصية هنا ليست سياسة عليك أن تثق بها — بل هي طريقة بناء التطبيق نفسه. تُحسب إجاباتك حيث أنت، ولا يغادر ملفك هذا الجهاز.",
+  },
+  privacyNoAccountTitle: { en: "No account", ar: "بلا حساب" },
+  privacyNoAccountBody: {
+    en: "Nothing to sign up for, and nothing tied to your name.",
+    ar: "لا شيء تسجّل فيه، ولا شيء مرتبط باسمك.",
+  },
+  privacyNoCloudTitle: { en: "No cloud", ar: "بلا سحابة" },
+  privacyNoCloudBody: {
+    en: "Answers are scored in your browser and kept only in its local storage.",
+    ar: "تُحسب الإجابات في متصفحك وتُحفظ في تخزينه المحلي وحده.",
+  },
+  privacyNoTrackingTitle: { en: "No tracking", ar: "بلا تتبّع" },
+  privacyNoTrackingBody: {
+    en: "There is no analytics on what you answer, and no third-party scripts watching the flow.",
+    ar: "لا تحليلات لما تجيب به، ولا نصوص من جهات خارجية تراقب مسارك.",
+  },
+  privacyNoSharingTitle: { en: "Nothing shared", ar: "لا مشاركة" },
+  privacyNoSharingBody: {
+    en: "Your responses are never transmitted, sold, or shared with anyone.",
+    ar: "لا تُرسَل إجاباتك ولا تُباع ولا تُشارَك مع أحد.",
+  },
+
+  // Erase everything --------------------------------------------------------
+  eraseCta: { en: "Erase my responses", ar: "امسح إجاباتي" },
+  eraseDialogTitle: { en: "Erase everything?", ar: "مسح كل شيء؟" },
+  eraseDialogBody: {
+    en: "This will permanently remove your saved answers and results from this device.",
+    ar: "سيؤدي هذا إلى إزالة إجاباتك ونتائجك المحفوظة من هذا الجهاز نهائياً.",
+  },
+  eraseCancel: { en: "Cancel", ar: "إلغاء" },
+  eraseConfirm: { en: "Erase everything", ar: "مسح كل شيء" },
+  eraseDone: { en: "Erased from this device", ar: "تم المسح من هذا الجهاز" },
+
+  // Landing — what Orenda isn't ---------------------------------------------
+  notTitle: { en: "What Orenda isn't", ar: "ما ليست عليه أوريندا" },
+  notDiagnosisTitle: { en: "A diagnosis", ar: "تشخيصاً" },
+  notDiagnosisBody: {
+    en: "It cannot tell you whether you have a mental health condition — only a qualified professional can do that.",
+    ar: "لا يمكنها أن تخبرك إن كنت مصاباً بحالة نفسية — هذا ما يقدر عليه مختص مؤهل وحده.",
+  },
+  notTherapyTitle: { en: "A replacement for therapy", ar: "بديلاً عن العلاج" },
+  notTherapyBody: {
+    en: "It can help you notice patterns; a professional can understand them in the context of your life.",
+    ar: "يمكنها أن تساعدك على ملاحظة الأنماط؛ أما فهمها في سياق حياتك فهو ما يقدر عليه المختص.",
+  },
+  notLabelTitle: { en: "A score that defines you", ar: "درجةً تعرّفك" },
+  notLabelBody: {
+    en: "Your results describe a moment — not who you are.",
+    ar: "تصف نتائجك لحظة — لا حقيقة من أنت.",
+  },
+
+  // Landing — closing statement ---------------------------------------------
+  closerTitle: { en: "A profile, not a label.", ar: "ملف، لا تصنيف." },
+  closerBody: {
+    en: "You are more than a score. Your results describe a moment, not who you are.",
+    ar: "أنت أكثر من درجة. تصف نتائجك لحظة، لا من تكون.",
   },
 
   // Assessment --------------------------------------------------------------
@@ -150,6 +217,38 @@ const UI = {
   },
   resultBreakdown: { en: "Section by section", ar: "قسماً بقسم" },
   resultNextStep: { en: "A next step", ar: "خطوة تالية" },
+
+  // Why am I seeing this? ---------------------------------------------------
+  whyTitle: { en: "Why am I seeing this?", ar: "لماذا أرى هذا؟" },
+  whyScreeningNote: {
+    en: "This is a screening result, not a diagnosis. It reflects what you reported, and can point to what may be worth a closer look with a professional.",
+    ar: "هذه نتيجة تقييم مبدئي، لا تشخيص. تعكس ما ذكرته، وقد تشير إلى ما قد يستحق نظرة أعمق مع مختص.",
+  },
+
+  // Where to go from here ---------------------------------------------------
+  resultPathsTitle: { en: "Where to go from here", ar: "إلى أين من هنا" },
+  pathGentleTitle: {
+    en: "If you want to start gently",
+    ar: "إن أردت أن تبدأ برفق",
+  },
+  pathGentleBody: {
+    en: "Pick one small thing — a steadier sleep time, a short walk, a message to someone you trust — and give it just this week.",
+    ar: "اختر شيئاً صغيراً واحداً — موعد نوم أكثر ثباتاً، مشي قصير، رسالة إلى شخص تثق به — وامنحه هذا الأسبوع فقط.",
+  },
+  pathUnderstandTitle: {
+    en: "If you want to understand this",
+    ar: "إن أردت أن تفهم هذا",
+  },
+  pathUnderstandBody: {
+    en: "Sit with the profile above. Notice which area you least wanted to read — that hesitation is often where the real information is.",
+    ar: "تأمّل الملف أعلاه. لاحظ أي مجال كنت أقل رغبة في قراءته — فذلك التردد غالباً حيث تكمن المعلومة الحقيقية.",
+  },
+  pathHeavyTitle: { en: "If this feels heavy", ar: "إن بدا هذا ثقيلاً" },
+  pathHeavyBody: {
+    en: "Some of what you're carrying may be worth talking through with a qualified professional. That isn't a last resort — it's a reasonable next step.",
+    ar: "بعض ما تحمله قد يستحق أن تتحدث عنه مع مختص مؤهل. وهذا ليس ملاذاً أخيراً — بل خطوة تالية معقولة.",
+  },
+  pathHeavyCta: { en: "Find professional support", ar: "ابحث عن دعم مختص" },
   retake: { en: "Take it again", ar: "إعادة التقييم" },
   backHome: { en: "Back to start", ar: "العودة إلى البداية" },
   downloadPdf: { en: "Download PDF", ar: "تنزيل PDF" },
@@ -183,6 +282,8 @@ const UI = {
 
   // Chrome ------------------------------------------------------------------
   languageGroup: { en: "Language", ar: "اللغة" },
+  themeToDark: { en: "Switch to dark", ar: "التبديل إلى الوضع الداكن" },
+  themeToLight: { en: "Switch to light", ar: "التبديل إلى الوضع الفاتح" },
 } as const satisfies Record<string, LocalizedText>;
 
 export type UIKey = keyof typeof UI;

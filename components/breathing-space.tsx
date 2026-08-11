@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useSyncExternalStore, useRef } from "react";
+import { useEffect, useState, useSyncExternalStore } from "react";
 import Link from "next/link";
 import { MotionConfig, motion, useMotionValue, useTransform, animate } from "motion/react";
 import { useLanguage } from "./language-provider";
@@ -24,8 +24,6 @@ const PHASES: Array<{ id: UIKey; seconds: number; scale: number }> = [
   { id: "breatheHold", seconds: 4, scale: 1 },
   { id: "breatheOut", seconds: 6, scale: 0.55 },
 ];
-
-const TOTAL_CYCLE = PHASES.reduce((sum, p) => sum + p.seconds, 0);
 
 /* SVG arc constants */
 const ARC_RADIUS = 46;
@@ -156,7 +154,7 @@ export function BreathingSpace() {
               }}
               style={{
                 background:
-                  "radial-gradient(circle at 45% 40%, rgba(255,254,252,0.75), rgba(255,254,252,0.4) 80%)",
+                  "radial-gradient(circle at 45% 40%, var(--breath-core-a), var(--breath-core-b) 80%)",
               }}
             />
 

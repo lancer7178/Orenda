@@ -47,8 +47,11 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#f9f8f6",
-  colorScheme: "light",
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#f9f8f6" },
+    { media: "(prefers-color-scheme: dark)", color: "#14161b" },
+  ],
+  colorScheme: "light dark",
 };
 
 export default function RootLayout({
@@ -61,6 +64,10 @@ export default function RootLayout({
       lang="en"
       dir="ltr"
       data-scroll-behavior="smooth"
+      // useTheme sets data-theme and LanguageProvider updates lang/dir after
+      // hydration — intentional DOM edits the static markup can't predict, so
+      // React is told not to warn about the attributes on <html>.
+      suppressHydrationWarning
       className={`${inter.variable} ${fraunces.variable} ${plexArabic.variable} h-full antialiased`}
     >
       <body className="orenda-wash bg-cream text-ink flex min-h-full flex-col">

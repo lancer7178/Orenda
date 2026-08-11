@@ -6,6 +6,7 @@ import { motion } from "motion/react";
 import { ScoreDial } from "./score-dial";
 import { DomainChips, DomainProfile } from "./domain-profile";
 import { PdfExportTemplate } from "./pdf-export-template";
+import { EraseEverything } from "./erase-everything";
 import { useLanguage } from "./language-provider";
 import { getResultLevel, resolveResultLevel } from "@/lib/content";
 import {
@@ -218,7 +219,7 @@ export function ResultScreen({ state, onRetake }: ResultScreenProps) {
         className="glass-card mt-14 rounded-3xl p-6 sm:p-8"
         style={{
           borderColor: "color-mix(in oklab, var(--color-sage-200) 60%, transparent)",
-          background: "rgba(242, 245, 243, 0.5)",
+          background: "color-mix(in oklab, var(--color-sage-50) 55%, transparent)",
         }}
       >
         <h2 className="text-sage-700 text-xs font-medium tracking-widest uppercase">
@@ -227,6 +228,36 @@ export function ResultScreen({ state, onRetake }: ResultScreenProps) {
         <p className="text-ink mt-3 text-lg leading-relaxed text-pretty">
           {result.actionCall}
         </p>
+      </motion.section>
+
+      {/* Where to go from here — gentle, non-prescriptive paths ---------- */}
+      <motion.section
+        variants={rise}
+        transition={transition}
+        className="border-hairline/70 mt-14 border-t pt-10"
+      >
+        <h2 className="font-display text-ink text-2xl font-semibold tracking-tight">
+          {t("resultPathsTitle")}
+        </h2>
+
+        <ul className="mt-8 flex flex-col gap-4">
+          <PathCard title={t("pathGentleTitle")} body={t("pathGentleBody")} />
+          <PathCard
+            title={t("pathUnderstandTitle")}
+            body={t("pathUnderstandBody")}
+          />
+          <PathCard title={t("pathHeavyTitle")} body={t("pathHeavyBody")}>
+            <a
+              href={HELPLINE_DIRECTORY}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-sage-600 decoration-sage-300 hover:decoration-sage-500 mt-3 inline-flex items-center gap-2 text-sm font-medium underline underline-offset-4 transition-colors"
+            >
+              {t("pathHeavyCta")}
+              <span aria-hidden="true">{isRtl ? "←" : "→"}</span>
+            </a>
+          </PathCard>
+        </ul>
       </motion.section>
 
       {/* Actions --------------------------------------------------------- */}
@@ -265,6 +296,24 @@ export function ResultScreen({ state, onRetake }: ResultScreenProps) {
         </motion.div>
       </motion.div>
 
+      <motion.div variants={rise} transition={transition} className="mt-6">
+        <EraseEverything />
+      </motion.div>
+
+      {/* A profile, not a label — the emotional close ------------------- */}
+      <motion.section
+        variants={rise}
+        transition={transition}
+        className="border-hairline/70 mt-14 flex flex-col items-center border-t pt-12 text-center"
+      >
+        <h2 className="font-display text-ink text-2xl font-semibold tracking-tight sm:text-3xl">
+          {t("closerTitle")}
+        </h2>
+        <p className="text-ink-soft mt-4 max-w-md text-[15px] leading-relaxed text-pretty">
+          {t("closerBody")}
+        </p>
+      </motion.section>
+
       <motion.p
         variants={rise}
         transition={transition}
@@ -302,5 +351,30 @@ export function ResultScreen({ state, onRetake }: ResultScreenProps) {
         />
       </div>
     </motion.main>
+  );
+}
+
+/**
+ * One gentle pathway in "Where to go from here". Framed as an invitation
+ * ("If you want to…") rather than an instruction, per the brief's insistence
+ * that next steps never read as medical commands.
+ */
+function PathCard({
+  title,
+  body,
+  children,
+}: {
+  title: string;
+  body: string;
+  children?: React.ReactNode;
+}) {
+  return (
+    <li className="border-hairline/60 bg-surface/40 rounded-2xl border p-5 sm:p-6">
+      <h3 className="text-ink text-[15px] font-semibold">{title}</h3>
+      <p className="text-ink-soft mt-2 text-sm leading-relaxed text-pretty">
+        {body}
+      </p>
+      {children}
+    </li>
   );
 }

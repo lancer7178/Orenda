@@ -107,6 +107,11 @@ export interface Domain {
   blurb: LocalizedText;
   /** The instrument the items are modelled on. */
   instrument: LocalizedText;
+  /**
+   * Plain-language "what this instrument measures", surfaced behind the
+   * result's "Why am I seeing this?" disclosure.
+   */
+  about: LocalizedText;
   /** The stem that precedes every question in the section. */
   prompt: LocalizedText;
   /**
