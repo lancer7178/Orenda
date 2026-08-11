@@ -3,7 +3,7 @@
 import { useRef, useState } from "react";
 import Link from "next/link";
 import { motion } from "motion/react";
-import { ScoreDial } from "./score-dial";
+import { LeafMark } from "./leaf-mark";
 import { DomainChips, DomainProfile } from "./domain-profile";
 import { PdfExportTemplate } from "./pdf-export-template";
 import { EraseEverything } from "./erase-everything";
@@ -143,13 +143,24 @@ export function ResultScreen({ state, onRetake }: ResultScreenProps) {
         transition={transition}
         className="mt-6 flex flex-col items-start gap-8 sm:flex-row sm:items-center sm:gap-10"
       >
-        <ScoreDial
-          score={state.totalScore}
-          maxScore={MAX_SCORE}
-          tone={level.tone}
-          caption={t("resultScoreLabel")}
-          outOfLabel={t("resultOutOf")}
-        />
+        {/* A quiet tonal anchor, not a score. The number that used to sit here
+            read as an "overall mental-health score" — exactly the register this
+            page avoids. The interpretive band is still stated in words beside
+            it; the leaf just carries the overall tone. */}
+        <div
+          aria-hidden="true"
+          className="relative flex h-28 w-28 shrink-0 items-center justify-center sm:h-32 sm:w-32"
+        >
+          <div
+            className="absolute inset-0 rounded-full opacity-80"
+            style={{
+              background: `radial-gradient(circle, ${TONE_GLOW[level.tone]}, transparent 70%)`,
+            }}
+          />
+          <div className="border-hairline bg-surface/70 relative flex h-20 w-20 items-center justify-center rounded-full border backdrop-blur-sm sm:h-24 sm:w-24">
+            <LeafMark className={`h-9 w-9 sm:h-10 sm:w-10 ${TONE_TEXT[level.tone]}`} />
+          </div>
+        </div>
 
         <div className="flex-1">
           <h1

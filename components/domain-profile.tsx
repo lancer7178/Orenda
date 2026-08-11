@@ -6,27 +6,64 @@ import type { BandId, DomainResult } from "@/lib/types";
 
 /**
  * Four steps on one warm ramp — sage, sand, terracotta, clay. Written as full
- * class names so Tailwind can see them at build time.
+ * class names so Tailwind can see them at build time. Never a traffic light:
+ * the tones sit close together on a single ramp, so the profile reads as a
+ * quiet shape, not a red/green scoreboard.
  */
-// Both stops derive from the tone token so the bar tracks the active theme —
-// the lighter stop is the same tone mixed toward transparent, not a baked-in
-// light-mode rgba that would stay put when the palette flips to dark.
-const BAND_GRADIENT: Record<BandId, string> = {
-  settled:
-    "linear-gradient(90deg, color-mix(in oklab, var(--color-tone-steady) 70%, transparent), var(--color-tone-steady))",
-  noticeable:
-    "linear-gradient(90deg, color-mix(in oklab, var(--color-tone-moderate) 70%, transparent), var(--color-tone-moderate))",
-  elevated:
-    "linear-gradient(90deg, color-mix(in oklab, var(--color-tone-elevated) 70%, transparent), var(--color-tone-elevated))",
-  high: "linear-gradient(90deg, color-mix(in oklab, var(--color-tone-high) 70%, transparent), var(--color-tone-high))",
-};
-
 const BAND_CHIP: Record<BandId, string> = {
   settled: "text-tone-steady border-tone-steady/35 bg-tone-steady/10",
   noticeable: "text-tone-moderate border-tone-moderate/35 bg-tone-moderate/10",
   elevated: "text-tone-elevated border-tone-elevated/35 bg-tone-elevated/10",
   high: "text-tone-high border-tone-high/35 bg-tone-high/10",
 };
+
+/** Filled dot colour per band, mirroring the chip ramp. */
+const BAND_DOT: Record<BandId, string> = {
+  settled: "bg-tone-steady",
+  noticeable: "bg-tone-moderate",
+  elevated: "bg-tone-elevated",
+  high: "bg-tone-high",
+};
+
+/**
+ * How many of the five dots are filled, keyed to the band so the dots and the
+ * worded chip can never disagree. The level is always carried by the chip text
+ * and the reading sentence too — the dots are decorative, never the sole
+ * signal, so nothing here depends on colour alone.
+ */
+const BAND_FILLED: Record<BandId, number> = {
+  settled: 2,
+  noticeable: 3,
+  elevated: 4,
+  high: 5,
+};
+
+const DOT_COUNT = 5;
+
+/** A calm five-step indicator — "the shape of how things seem", not a metric. */
+function BandDots({ bandId, index }: { bandId: BandId; index: number }) {
+  const filled = BAND_FILLED[bandId];
+
+  return (
+    <div aria-hidden="true" className="mt-3 flex items-center gap-1.5">
+      {Array.from({ length: DOT_COUNT }, (_, dot) => (
+        <motion.span
+          key={dot}
+          initial={{ opacity: 0, scale: 0.5 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{
+            duration: 0.4,
+            delay: 0.3 + index * 0.07 + dot * 0.05,
+            ease: [0.22, 0.61, 0.36, 1],
+          }}
+          className={`h-2.5 w-2.5 rounded-full ${
+            dot < filled ? BAND_DOT[bandId] : "bg-hairline"
+          }`}
+        />
+      ))}
+    </div>
+  );
+}
 
 export function DomainProfile({ results }: { results: DomainResult[] }) {
   const { t, tx } = useLanguage();
@@ -60,19 +97,7 @@ export function DomainProfile({ results }: { results: DomainResult[] }) {
             </span>
           </div>
 
-          <div className="bg-hairline/50 mt-2.5 h-2.5 w-full overflow-hidden rounded-full">
-            <motion.div
-              className="h-full rounded-full"
-              style={{ background: BAND_GRADIENT[result.band.id] }}
-              initial={{ width: 0 }}
-              animate={{ width: `${Math.round(result.ratio * 100)}%` }}
-              transition={{
-                duration: 1,
-                delay: 0.35 + index * 0.07,
-                ease: [0.22, 0.61, 0.36, 1],
-              }}
-            />
-          </div>
+          <BandDots bandId={result.band.id} index={index} />
 
           <p className="text-ink-soft mt-3 text-sm leading-relaxed text-pretty">
             {tx(result.band.reading)}
