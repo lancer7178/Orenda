@@ -260,6 +260,32 @@ const UI = {
   bandElevated: { en: "Elevated", ar: "مرتفع" },
   bandHigh: { en: "High", ar: "شديد" },
 
+  // Safety — an in-flow pause when a sensitive answer is given -------------
+  safetyTitle: {
+    en: "Something here deserves care",
+    ar: "هناك ما يستحق العناية هنا",
+  },
+  safetyBody: {
+    en: "One of your answers suggests you may be going through something particularly heavy right now. We wanted to pause here for a moment — not to alarm you, and not because anything is wrong with you.",
+    ar: "تشير إحدى إجاباتك إلى أنك قد تمرّ بشيء ثقيل بوجه خاص في هذه الفترة. أردنا أن نتوقف هنا لحظة — لا لنقلقك، ولا لأن فيك خطأً.",
+  },
+  safetyBodyUrgent: {
+    en: "Orenda cannot assess your immediate safety. If you feel you might hurt yourself, or you are in immediate danger, please reach out to urgent local help, or to someone you trust. You don't have to carry this alone.",
+    ar: "لا تستطيع أوريندا تقييم سلامتك المباشرة. إن شعرت أنك قد تؤذي نفسك، أو كنت في خطر مباشر، فمن فضلك تواصل مع مساعدة عاجلة قريبة منك، أو مع شخص تثق به. لست مضطراً لحمل هذا وحدك.",
+  },
+  safetySupportTitle: {
+    en: "If you'd like to talk to someone now",
+    ar: "إن أردت أن تتحدث إلى شخص الآن",
+  },
+  safetyContinue: {
+    en: "Continue the check-in",
+    ar: "متابعة التقييم",
+  },
+  safetyLeave: {
+    en: "Leave for now",
+    ar: "المغادرة الآن",
+  },
+
   // Crisis ------------------------------------------------------------------
   crisisTitle: {
     en: "Please read this part first",

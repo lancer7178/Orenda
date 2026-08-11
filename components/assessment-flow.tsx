@@ -14,6 +14,7 @@ import { useLanguage } from "./language-provider";
 import { ProgressBar } from "./progress-bar";
 import { QuestionCard } from "./question-card";
 import { ResultScreen } from "./result-screen";
+import { SafetyInterstitial } from "./safety-interstitial";
 import { SectionIntro } from "./section-intro";
 import { SectionProgress } from "./section-progress";
 import {
@@ -74,6 +75,9 @@ export function AssessmentFlow() {
   // Held while the highlight is visible but before the question changes, so
   // the user sees their choice register before anything moves.
   const [pendingScore, setPendingScore] = useState<number | null>(null);
+  // Raised the moment a self-harm item is answered with any weight, so the
+  // flow pauses on a care screen instead of sliding on to the next question.
+  const [safetyOpen, setSafetyOpen] = useState(false);
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const clearTimer = useCallback(() => {
@@ -103,13 +107,19 @@ export function AssessmentFlow() {
 
       setPendingScore(score);
       clearTimer();
+      // Whether this answer should raise the care screen, captured now: the
+      // record advances past this item before the timer fires.
+      const raisesSafety = localizedQuestion.isRiskItem === true && score > 0;
       timerRef.current = setTimeout(() => {
         dispatch({ type: "answer", questionId: localizedQuestion.id, score });
         setPendingScore(null);
         timerRef.current = null;
+        // The answer is recorded and scored either way — honesty is never
+        // dropped. This only pauses the flow before the next question shows.
+        if (raisesSafety) setSafetyOpen(true);
       }, AUTO_ADVANCE_MS);
     },
-    [pendingScore, clearTimer, localizedQuestion.id],
+    [pendingScore, clearTimer, localizedQuestion.id, localizedQuestion.isRiskItem],
   );
 
   const handleBack = useCallback(() => {
@@ -121,6 +131,7 @@ export function AssessmentFlow() {
   const handleRetake = useCallback(() => {
     clearTimer();
     setPendingScore(null);
+    setSafetyOpen(false);
     clearProgress();
     dispatch({ type: "reset" });
     setResume("resolved");
@@ -132,6 +143,7 @@ export function AssessmentFlow() {
   }, [savedState]);
 
   const handleStartFresh = useCallback(() => {
+    setSafetyOpen(false);
     clearProgress();
     dispatch({ type: "reset" });
     setResume("resolved");
@@ -146,7 +158,7 @@ export function AssessmentFlow() {
   // and Enter doubles as "continue". Number-key answering lives in the card;
   // this handler deliberately leaves digits alone so the two never collide.
   useEffect(() => {
-    if (state.isCompleted || resumePromptOpen) return;
+    if (state.isCompleted || resumePromptOpen || safetyOpen) return;
 
     const forwardKey = isRtl ? "ArrowLeft" : "ArrowRight";
     const backKey = isRtl ? "ArrowRight" : "ArrowLeft";
@@ -201,6 +213,7 @@ export function AssessmentFlow() {
     pendingScore,
     isRtl,
     resumePromptOpen,
+    safetyOpen,
     handleBack,
     handleSelect,
   ]);
@@ -244,6 +257,13 @@ export function AssessmentFlow() {
         <ResultScreen state={state} onRetake={handleRetake} />
       </>
     );
+  }
+
+  // -- Safety pause ---------------------------------------------------------
+  // Sits between the sensitive answer and the next question. The answer is
+  // already recorded; this only holds the flow until the reader chooses to go on.
+  if (safetyOpen) {
+    return <SafetyInterstitial onContinue={() => setSafetyOpen(false)} />;
   }
 
   // -- Question / section flow ---------------------------------------------

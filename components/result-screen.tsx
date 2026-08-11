@@ -17,10 +17,8 @@ import {
 } from "@/lib/assessment";
 import { MAX_SCORE } from "@/lib/questions";
 import { renderNodeToPdf } from "@/lib/pdf-export";
+import { HELPLINE_DIRECTORY } from "@/lib/resources";
 import type { AssessmentState, ResultTone } from "@/lib/types";
-
-/** International directory of crisis lines, filterable by country. */
-const HELPLINE_DIRECTORY = "https://findahelpline.com";
 
 const TONE_TEXT: Record<ResultTone, string> = {
   steady: "text-tone-steady",
