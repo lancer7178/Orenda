@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useRef } from "react";
 import Link from "next/link";
 import { motion } from "motion/react";
 import { useLanguage } from "./language-provider";
@@ -36,6 +37,16 @@ const item = {
  */
 export function SafetyInterstitial({ onContinue }: SafetyInterstitialProps) {
   const { t, isRtl } = useLanguage();
+  const headingRef = useRef<HTMLHeadingElement>(null);
+
+  // The answer that raised this screen unmounted the button that had focus, so
+  // without this a keyboard or screen-reader user would be dropped on <body>
+  // and might never reach the care message. Move focus to the heading, which is
+  // made programmatically focusable below, so the screen is announced and the
+  // support link is one Tab away.
+  useEffect(() => {
+    headingRef.current?.focus();
+  }, []);
 
   return (
     <main className="mx-auto flex w-full max-w-xl flex-1 flex-col justify-center px-5 py-16 sm:px-8">
@@ -58,10 +69,12 @@ export function SafetyInterstitial({ onContinue }: SafetyInterstitialProps) {
         </motion.div>
 
         <motion.h1
+          ref={headingRef}
           id="safety-title"
+          tabIndex={-1}
           variants={item}
           transition={transition}
-          className="font-display text-ink mt-6 text-2xl font-semibold tracking-tight sm:text-[28px]"
+          className="font-display text-ink mt-6 text-2xl font-semibold tracking-tight focus:outline-none sm:text-[28px]"
         >
           {t("safetyTitle")}
         </motion.h1>

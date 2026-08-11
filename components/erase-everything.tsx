@@ -113,17 +113,41 @@ function EraseDialog({
   onConfirm: () => void;
 }) {
   const cancelRef = useRef<HTMLButtonElement>(null);
+  const dialogRef = useRef<HTMLDivElement>(null);
 
   // Escape closes; focus lands on the safe (Cancel) action on open, so a stray
-  // Enter never erases. Body scroll is locked while the dialog is up.
+  // Enter never erases. Tab is trapped inside the dialog so focus can't wander
+  // onto the page behind an aria-modal surface. Body scroll is locked while up.
   useEffect(() => {
     cancelRef.current?.focus();
+
     const onKeyDown = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
         event.preventDefault();
         onCancel();
+        return;
+      }
+      if (event.key !== "Tab") return;
+
+      const focusables = dialogRef.current?.querySelectorAll<HTMLElement>(
+        'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])',
+      );
+      if (!focusables || focusables.length === 0) return;
+
+      const first = focusables[0];
+      const last = focusables[focusables.length - 1];
+      const active = document.activeElement;
+
+      // Wrap at the edges; if focus somehow sits outside, pull it back in.
+      if (event.shiftKey && (active === first || !dialogRef.current?.contains(active))) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && active === last) {
+        event.preventDefault();
+        first.focus();
       }
     };
+
     window.addEventListener("keydown", onKeyDown);
     const previousOverflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
@@ -150,6 +174,7 @@ function EraseDialog({
       />
 
       <motion.div
+        ref={dialogRef}
         role="alertdialog"
         aria-modal="true"
         aria-labelledby="erase-title"
